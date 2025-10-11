@@ -1,6 +1,7 @@
 import hash_calculator
 import os
 from log_config import logger
+import nfce_extractor
 
 
 def run():
@@ -15,3 +16,5 @@ def run():
         file_path = os.path.join(pending_dir, file)
         file_hash = hash_calculator.calculate(file_path)
         logger.info("Calculated hash", file_name=file, hash=file_hash)
+        data = nfce_extractor.extract_nfce_data(file_path)
+        print(data)
