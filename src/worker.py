@@ -1,16 +1,17 @@
-from datetime import datetime
 import hash_calculator
-import create_tables
 import os
+from log_config import logger
 
-start = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-print(f"[{start}] - Starting processing...")
 
-pending_dir = "./pdf-files/pending"
-pending_files = os.listdir(pending_dir)
-print(f"Found {len(pending_files)} files in {pending_dir}.")
-for file in pending_files:
-    print(f"Processing file: {file}")
-    file_path = os.path.join(pending_dir, file)
-    file_hash = hash_calculator.calculate(file_path)
-    print(f"Calculated hash for {file}: {file_hash}")
+def run():
+    logger.info("Starting processing...")
+
+    pending_dir = "./pdf-files/pending"
+    pending_files = os.listdir(pending_dir)
+    logger.info("Found pending files", count=len(pending_files))
+
+    for file in pending_files:
+        logger.info("Processing file", file_name=file)
+        file_path = os.path.join(pending_dir, file)
+        file_hash = hash_calculator.calculate(file_path)
+        logger.info("Calculated hash", file_name=file, hash=file_hash)
