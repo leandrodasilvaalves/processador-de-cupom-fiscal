@@ -208,3 +208,4 @@ pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pythonvanilla,circuitpython
 db-data/
+pdf-files/
