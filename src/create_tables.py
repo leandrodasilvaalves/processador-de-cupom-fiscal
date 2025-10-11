@@ -27,6 +27,7 @@ def __create_tables(cursor):
             RazaoSocial VARCHAR(150) NOT NULL,
             NomeFantasia VARCHAR(150),
             CNPJ CHAR(14) NOT NULL UNIQUE,
+            IE CHAR(20),
             Endereco VARCHAR(255)
         )
     """)
