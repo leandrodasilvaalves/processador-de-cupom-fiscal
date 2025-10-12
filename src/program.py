@@ -1,8 +1,11 @@
 from log_config import logger
-import create_tables
+import db_tables
 import worker
+from db import connect
 
 logger.info("Starting the application...")
-create_tables.setup_database()
 
-worker.run()
+db = connect()
+db_tables.setup_database(db)
+
+worker.run(db)

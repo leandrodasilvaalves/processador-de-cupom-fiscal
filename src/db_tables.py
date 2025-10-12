@@ -1,24 +1,8 @@
-import mysql.connector as connector
-import os
-from dotenv import load_dotenv
 from log_config import logger
 
-def setup_database():
+def setup_database(db):
     logger.info("Setting up the database...")
-    load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
-
-    db = connector.connect(
-        host=os.getenv("MYSQL_HOST"),
-        user=os.getenv("MYSQL_USER"),
-        password=os.getenv("MYSQL_PASSWORD"),
-        database=os.getenv("MYSQL_DATABASE")
-    )
-
     cursor = db.cursor()
-    __create_tables(cursor)
-
-
-def __create_tables(cursor):
 
     logger.info("Creating tables if they do not exist...")
     cursor.execute("""
@@ -56,6 +40,7 @@ def __create_tables(cursor):
             Situacao CHAR(20) NOT NULL,
             DanfeNumero CHAR(20),
             DanfeSerie CHAR(10),
+            Protocolo CHAR(20), 
             HashArquivo VARCHAR(64),               
             FOREIGN KEY (EmpresaID) REFERENCES Empresas(Id),
             INDEX idx_compras_hasharquivo (HashArquivo)
@@ -68,7 +53,7 @@ def __create_tables(cursor):
             CompraID INT,
             ProdutoID INT,
             Quantidade INT NOT NULL,
-            PrecoUnitario DECIMAL(10, 2) NOT NULL,
+            Preco DECIMAL(10, 2) NOT NULL,
             Desconto DECIMAL(10, 2) DEFAULT 0,
             FOREIGN KEY (CompraID) REFERENCES Compras(Id),
             FOREIGN KEY (ProdutoID) REFERENCES Produtos(Id)

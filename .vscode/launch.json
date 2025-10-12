@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "debugpy",
+      "request": "launch",
+      "name": "Launch Main Program",
+      "program": "${workspaceFolder}/src/program.py",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "programFile",
+      "type": "pickString",
+      "description": "Select the Python file to debug",
+      "options": [
+        "program.py",
+        "create_tables.py",
+        "hash_calculator.py",
+        "log_config.py",
+        "nfce_extractor.py",
+        "worker.py"
+      ]
+    }
+  ]
+}
