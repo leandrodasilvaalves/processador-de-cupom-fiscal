@@ -26,7 +26,7 @@ def extract_nfce_data(file_path: str) -> Dict[str, Any] | None:
             status_match = re.search(r"Situação:\s*(\w+)", full_text)
             access_key_match = re.search(r"CHAVE DE ACESSO NFC-e\s*([\d\s]+)", full_text)
 
-            nfce_data["Issuer"] = {
+            nfce_data["Emissor"] = {
                 "RazaoSocial": re.search(r"RAZÃO SOCIAL:\s*(.+)", full_text).group(1).strip() if re.search(r"RAZÃO SOCIAL:\s*(.+)", full_text) else None,
                 "NomeFantasia": re.search(r"NOME FANTASIA:\s*(.+)", full_text).group(1).strip() if re.search(r"NOME FANTASIA:\s*(.+)", full_text) else None,
                 "CNPJ": cnpj_match.group(1) if cnpj_match else None,

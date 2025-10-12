@@ -1,7 +1,7 @@
-from log_config import logger
-import db_tables
+from config.log_config import logger
+from database import db_tables
 import worker
-from db import connect
+from database.db import connect
 
 logger.info("Starting the application...")
 

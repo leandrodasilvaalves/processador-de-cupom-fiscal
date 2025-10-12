@@ -1,7 +1,7 @@
-import hash_calculator
 import os
-from log_config import logger
-import nfce_extractor
+from config.log_config import logger
+from database import db_purchase
+from services import company_service, hash_calculator, nfce_extractor
 
 
 def run(db):
@@ -12,9 +12,18 @@ def run(db):
     logger.info("Found pending files", count=len(pending_files))
 
     for file in pending_files:
-        # logger.info("Processing file", file_name=file)
+        logger.info("Processing file", file_name=file)
         file_path = os.path.join(pending_dir, file)
+        
         file_hash = hash_calculator.calculate(file_path)
-        # logger.info("Calculated hash", file_name=file, hash=file_hash)
-        data = nfce_extractor.extract_nfce_data(file_path)
-        # print(data.Totais)
+        logger.info("Calculated hash", file_name=file, hash=file_hash)
+
+        if db_purchase.get_by_hash_file(db, file_hash):
+            logger.info("File already processed, skipping", file_name=file, hash=file_hash)
+            continue
+        
+        else:
+            data = nfce_extractor.extract_nfce_data(file_path)
+            company_service.process(data['Emissor'])
+           
+           

@@ -1,4 +1,4 @@
-from log_config import logger
+from config.log_config import logger
 
 def setup_database(db):
     logger.info("Setting up the database...")

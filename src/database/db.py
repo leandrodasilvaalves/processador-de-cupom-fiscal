@@ -1,7 +1,7 @@
 import mysql.connector as connector
 import os
 from dotenv import load_dotenv
-from log_config import logger
+from config.log_config import logger
 
 def connect():
     load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
