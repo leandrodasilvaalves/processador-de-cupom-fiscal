@@ -1,3 +1,4 @@
+from helpers.string_helper import extract_numbers
 
 def get_by_cnpj(db, cnpj):
     cursor = db.cursor()
@@ -13,8 +14,8 @@ def insert(db, company):
         (
             company['RazaoSocial'],
             company['NomeFantasia'],
-            company['CNPJ'],
-            company['IE'],
+            extract_numbers(company['CNPJ']),
+            extract_numbers(company['IE']),
             company['Endereco']
         )
     )
