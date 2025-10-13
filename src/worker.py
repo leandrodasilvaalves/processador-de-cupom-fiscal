@@ -31,5 +31,8 @@ def run(db):
             purchase_id = purchase_service.process(db, data, company_id, file_hash)
             logger.info("Created purchase record", purchase_id=purchase_id)
 
+            purchase_service.process_items(db, data['itens'], purchase_id)
+            logger.info("Processed purchase items", purchase_id=purchase_id, item_count=len(data['itens']))
+
            
            

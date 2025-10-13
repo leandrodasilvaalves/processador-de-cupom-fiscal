@@ -1,4 +1,5 @@
 from database import db_purchase, db_product
+from services import product_service
 
 
 def process(db, data, company_id, file_hash):
@@ -14,10 +15,11 @@ def process(db, data, company_id, file_hash):
 
 def process_items(db, items, purchase_id):
     for item in items:
-        product = db_product.get_by_name(db, item['compra_id'])
+        product = product_service.process(db, item)
+
+        item['produto_id'] = product['id']
         item['compra_id'] = purchase_id
         item['quantidade'] = float(item['quantidade'])
-        item['unidade'] = item['unidade']
         item['preco'] = float(item['preco'])
         if 'desconto' in item:
             item['desconto'] = float(item['desconto'])

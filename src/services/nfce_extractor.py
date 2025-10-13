@@ -53,7 +53,7 @@ def extract_nfce_data(file_path: str) -> Dict[str, Any] | None:
                 
                 processed_items.append({
                     "item": item.strip(),
-                    "compra_id": description.strip(),
+                    "descricao": description.strip(),
                     "quantidade": to_float(quantity),
                     "unidade": unity.strip(),
                     "preco": to_float(price),

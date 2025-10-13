@@ -6,9 +6,9 @@ def get_by_name(db, name):
 def insert(db, product):
     cursor = db.cursor()
     cursor.execute(
-        """INSERT INTO produtos (nome, preco) 
-           VALUES (%s, %s)""",
-        (product['nome'], product['preco'])
+        """INSERT INTO produtos (nome, preco, unidade) 
+           VALUES (%s, %s, %s)""",
+        (product['nome'], float(product['preco']), product['unidade'])
     )
     db.commit()
     return cursor.lastrowid

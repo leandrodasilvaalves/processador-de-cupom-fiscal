@@ -21,6 +21,7 @@ def setup_database(db):
             id INT AUTO_INCREMENT PRIMARY KEY,
             nome VARCHAR(150) NOT NULL,
             preco DECIMAL(10, 2) NOT NULL,
+            unidade VARCHAR(10) NOT NULL,
             data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_produtos_nome (nome)
@@ -53,8 +54,7 @@ def setup_database(db):
             id INT AUTO_INCREMENT PRIMARY KEY,
             compra_id INT,
             produto_id INT,
-            quantidade INT NOT NULL,
-            unidade VARCHAR(10) NOT NULL,
+            quantidade INT NOT NULL,            
             preco DECIMAL(10, 2) NOT NULL,
             desconto DECIMAL(10, 2) DEFAULT 0,
             FOREIGN KEY (compra_id) REFERENCES compras(id),
