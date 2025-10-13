@@ -6,56 +6,58 @@ def setup_database(db):
 
     logger.info("Creating tables if they do not exist...")
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Empresas (
-            Id INT AUTO_INCREMENT PRIMARY KEY,
-            RazaoSocial VARCHAR(150) NOT NULL,
-            NomeFantasia VARCHAR(150),
-            CNPJ CHAR(14) NOT NULL UNIQUE,
-            IE CHAR(20),
-            Endereco VARCHAR(255)
+        CREATE TABLE IF NOT EXISTS empresas (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            razao_social VARCHAR(150) NOT NULL,
+            nome_fantasia VARCHAR(150),
+            cnpj CHAR(14) NOT NULL UNIQUE,
+            ie CHAR(20),
+            endereco VARCHAR(255)
         )
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Produtos (
-            Id INT AUTO_INCREMENT PRIMARY KEY,
-            Nome VARCHAR(150) NOT NULL,
-            Preco DECIMAL(10, 2) NOT NULL,
-            DataCadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            UltimaAtualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        CREATE TABLE IF NOT EXISTS produtos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nome VARCHAR(150) NOT NULL,
+            preco DECIMAL(10, 2) NOT NULL,
+            data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_produtos_nome (nome)
         )
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS Compras (
-            Id INT AUTO_INCREMENT PRIMARY KEY,
-            EmpresaID INT,
-            ChaveAcessoNFCe CHAR(44) NOT NULL UNIQUE,
-            TotalCompra DECIMAL(10, 2) NOT NULL,
-            Desconto DECIMAL(10, 2) DEFAULT 0,
-            ValorPago DECIMAL(10, 2) NOT NULL,
-            FormaPagamento VARCHAR(50) NOT NULL,
-            DataEmissao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            DataAutorizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            Situacao CHAR(20) NOT NULL,
-            DanfeNumero CHAR(20),
-            DanfeSerie CHAR(10),
-            Protocolo CHAR(20), 
-            HashArquivo VARCHAR(64),               
-            FOREIGN KEY (EmpresaID) REFERENCES Empresas(Id),
-            INDEX idx_compras_hasharquivo (HashArquivo)
+        CREATE TABLE IF NOT EXISTS compras (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            empresa_id INT,
+            chave_acesso_nfce CHAR(44) NOT NULL UNIQUE,
+            total_compra DECIMAL(10, 2) NOT NULL,
+            desconto DECIMAL(10, 2) DEFAULT 0,
+            valor_pago DECIMAL(10, 2) NOT NULL,
+            forma_pagamento VARCHAR(50) NOT NULL,
+            data_emissao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            data_autorizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            situacao CHAR(20) NOT NULL,
+            danfe_numero CHAR(20),
+            danfe_serie CHAR(10),
+            protocolo CHAR(20), 
+            hash_arquivo VARCHAR(64),               
+            FOREIGN KEY (empresa_id) REFERENCES empresas(id),
+            INDEX idx_compras_hash_arquivo (hash_arquivo)
         )
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS CompraItens (
-            Id INT AUTO_INCREMENT PRIMARY KEY,
-            CompraID INT,
-            ProdutoID INT,
-            Quantidade INT NOT NULL,
-            Preco DECIMAL(10, 2) NOT NULL,
-            Desconto DECIMAL(10, 2) DEFAULT 0,
-            FOREIGN KEY (CompraID) REFERENCES Compras(Id),
-            FOREIGN KEY (ProdutoID) REFERENCES Produtos(Id)
+        CREATE TABLE IF NOT EXISTS compras_items (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            compra_id INT,
+            produto_id INT,
+            quantidade INT NOT NULL,
+            unidade VARCHAR(10) NOT NULL,
+            preco DECIMAL(10, 2) NOT NULL,
+            desconto DECIMAL(10, 2) DEFAULT 0,
+            FOREIGN KEY (compra_id) REFERENCES compras(id),
+            FOREIGN KEY (produto_id) REFERENCES produtos(id)
         )
     """)

@@ -26,19 +26,19 @@ def extract_nfce_data(file_path: str) -> Dict[str, Any] | None:
             status_match = re.search(r"Situação:\s*(\w+)", full_text)
             access_key_match = re.search(r"CHAVE DE ACESSO NFC-e\s*([\d\s]+)", full_text)
 
-            nfce_data["Emissor"] = {
-                "RazaoSocial": re.search(r"RAZÃO SOCIAL:\s*(.+)", full_text).group(1).strip() if re.search(r"RAZÃO SOCIAL:\s*(.+)", full_text) else None,
-                "NomeFantasia": re.search(r"NOME FANTASIA:\s*(.+)", full_text).group(1).strip() if re.search(r"NOME FANTASIA:\s*(.+)", full_text) else None,
-                "CNPJ": cnpj_match.group(1) if cnpj_match else None,
-                "IE": cnpj_match.group(2) if cnpj_match else None,
-                "Endereco": re.search(r"ENDEREÇO:\s*(.+)\n", full_text).group(1).strip() if re.search(r"ENDEREÇO:\s*(.+)\n", full_text) else None,
-                "DanfeNumero": series_number_match.group(1).strip() if series_number_match else None,
-                "DanfeSerie": series_number_match.group(2).strip() if series_number_match else None,                
-                "ChaveAcessoNFCe": access_key_match.group(1).replace(" ", "") if access_key_match else None,                
-                "DataEmissao": issue_date_match.group(1).strip() if issue_date_match else None,
-                "DataAutorizacao": authorization_date_match.group(1).strip() if authorization_date_match else None,
-                "Protocolo": protocol_match.group(1).strip() if protocol_match else None,
-                "Situacao": status_match.group(1).strip() if status_match else None,
+            nfce_data["emissor"] = {
+                "razao_social": re.search(r"RAZÃO SOCIAL:\s*(.+)", full_text).group(1).strip() if re.search(r"RAZÃO SOCIAL:\s*(.+)", full_text) else None,
+                "nome_fantasia": re.search(r"NOME FANTASIA:\s*(.+)", full_text).group(1).strip() if re.search(r"NOME FANTASIA:\s*(.+)", full_text) else None,
+                "cnpj": cnpj_match.group(1) if cnpj_match else None,
+                "ie": cnpj_match.group(2) if cnpj_match else None,
+                "endereco": re.search(r"ENDEREÇO:\s*(.+)\n", full_text).group(1).strip() if re.search(r"ENDEREÇO:\s*(.+)\n", full_text) else None,
+                "danfe_numero": series_number_match.group(1).strip() if series_number_match else None,
+                "danfe_serie": series_number_match.group(2).strip() if series_number_match else None,                
+                "chave_acesso_nfce": access_key_match.group(1).replace(" ", "") if access_key_match else None,                
+                "data_emissao": issue_date_match.group(1).strip() if issue_date_match else None,
+                "data_autorizacao": authorization_date_match.group(1).strip() if authorization_date_match else None,
+                "protocolo": protocol_match.group(1).strip() if protocol_match else None,
+                "situacao": status_match.group(1).strip() if status_match else None,
             }
             
             ITEM_PATTERN = re.compile(r"\s*(\d{3})\s+(.+?)\s+([\d.,]+)\s+(\w+)\s+([\d.,]+)\s+([\d.,]+)\s+([\d.,]+)")
@@ -52,24 +52,24 @@ def extract_nfce_data(file_path: str) -> Dict[str, Any] | None:
                     return float(s.replace(',', '.'))
                 
                 processed_items.append({
-                    "Item": item.strip(),
-                    "CompraID": description.strip(),
-                    "quantity": to_float(quantity),
-                    "Quantidade": unity.strip(),
-                    "Preco": to_float(price),
-                    "Desconto": to_float(discount),
-                    "Total": to_float(total),
+                    "item": item.strip(),
+                    "compra_id": description.strip(),
+                    "quantidade": to_float(quantity),
+                    "unidade": unity.strip(),
+                    "preco": to_float(price),
+                    "desconto": to_float(discount),
+                    "total": to_float(total),
                 })
             
-            nfce_data["Itens"] = processed_items
+            nfce_data["itens"] = processed_items
 
             totals = {}
-            totals["TotalCompra"] = float(re.search(r"Valor Total dos Produtos \(R\$\)\s*([\d,.]+)", full_text).group(1).replace(',', '.')) if re.search(r"Valor Total dos Produtos \(R\$\)\s*([\d,.]+)", full_text) else 0.0
-            totals["Desconto"] = float(re.search(r"Valor Descontos \(R\$\)\s*([\d,.]+)", full_text).group(1).replace(',', '.')) if re.search(r"Valor Descontos \(R\$\)\s*([\d,.]+)", full_text) else 0.0
-            totals["ValorPago"] = float(re.search(r"Valor Pago \(R\$\)\s*([\d,.]+)", full_text).group(1).replace(',', '.')) if re.search(r"Valor Pago \(R\$\)\s*([\d,.]+)", full_text) else 0.0
-            totals["FormaPagamento"] = re.search(r"Forma Pagamento\s*(\w+)", full_text).group(1).strip() if re.search(r"Forma Pagamento\s*(\w+)", full_text) else None
+            totals["total_compra"] = float(re.search(r"Valor Total dos Produtos \(R\$\)\s*([\d,.]+)", full_text).group(1).replace(',', '.')) if re.search(r"Valor Total dos Produtos \(R\$\)\s*([\d,.]+)", full_text) else 0.0
+            totals["desconto"] = float(re.search(r"Valor Descontos \(R\$\)\s*([\d,.]+)", full_text).group(1).replace(',', '.')) if re.search(r"Valor Descontos \(R\$\)\s*([\d,.]+)", full_text) else 0.0
+            totals["valor_pago"] = float(re.search(r"Valor Pago \(R\$\)\s*([\d,.]+)", full_text).group(1).replace(',', '.')) if re.search(r"Valor Pago \(R\$\)\s*([\d,.]+)", full_text) else 0.0
+            totals["forma_pagamento"] = re.search(r"Forma Pagamento\s*(\w+)", full_text).group(1).strip() if re.search(r"Forma Pagamento\s*(\w+)", full_text) else None
 
-            nfce_data["Totais"] = totals
+            nfce_data["totais"] = totals
                          
         return nfce_data
 

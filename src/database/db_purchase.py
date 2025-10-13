@@ -2,30 +2,30 @@ from helpers import datetime_helper as dth
 
 def get_by_hash_file(db, hash_file):
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM Compras WHERE HashArquivo = %s", (hash_file,))
+    cursor.execute("SELECT * FROM compras WHERE hash_arquivo = %s", (hash_file,))
     return cursor.fetchone()
 
 def insert(db, purchase):
     cursor = db.cursor()
     cursor.execute(
-        """INSERT INTO Compras (EmpresaID, ChaveAcessoNFCe, TotalCompra, 
-            Desconto, ValorPago, FormaPagamento, DataEmissao, 
-            DataAutorizacao, Situacao, DanfeNumero, DanfeSerie, Protocolo, HashArquivo) 
+        """INSERT INTO compras (empresa_id, chave_acesso_nfce, total_compra, 
+            desconto, valor_pago, forma_pagamento, data_emissao, 
+            data_autorizacao, situacao, danfe_numero, danfe_serie, protocolo, hash_arquivo) 
            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
         (
-            purchase['EmpresaID'],
-            purchase['ChaveAcessoNFCe'],
-            purchase['TotalCompra'],
-            purchase['Desconto'],
-            purchase['ValorPago'],
-            purchase['FormaPagamento'],
-            dth.parse_datetime(purchase['DataEmissao']),
-            dth.parse_datetime(purchase['DataAutorizacao']),
-            purchase['Situacao'],
-            purchase['DanfeNumero'],
-            purchase['DanfeSerie'],
-            purchase['Protocolo'],
-            purchase['HashArquivo']
+            purchase['empresa_id'],
+            purchase['chave_acesso_nfce'],
+            purchase['total_compra'],
+            purchase['desconto'],
+            purchase['valor_pago'],
+            purchase['forma_pagamento'],
+            dth.parse_datetime(purchase['data_emissao']),
+            dth.parse_datetime(purchase['data_autorizacao']),
+            purchase['situacao'],
+            purchase['danfe_numero'],
+            purchase['danfe_serie'],
+            purchase['protocolo'],
+            purchase['hash_arquivo']
         )
     )
     db.commit()
@@ -35,14 +35,14 @@ def insert(db, purchase):
 def insert_item(db, item):
     cursor = db.cursor()
     cursor.execute(
-        """INSERT INTO ItensCompra (CompraID, ProdutoID, Quantidade, Preco) 
+        """INSERT INTO compras_items (compra_id, produto_id, quantidade, preco) 
            VALUES (%s, %s, %s, %s)""",
         (
-            item['CompraID'],
-            item['ProdutoID'],
-            item['Quantidade'],
-            item['Preco']
+            item['compra_id'],
+            item['produto_id'],
+            item['quantidade'],
+            item['preco']
         )
     )
     db.commit()
-    return cursor.lastrowid
+    return
