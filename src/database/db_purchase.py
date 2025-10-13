@@ -1,3 +1,5 @@
+from helpers import datetime_helper as dth
+
 def get_by_hash_file(db, hash_file):
     cursor = db.cursor()
     cursor.execute("SELECT * FROM Compras WHERE HashArquivo = %s", (hash_file,))
@@ -6,23 +8,23 @@ def get_by_hash_file(db, hash_file):
 def insert(db, purchase):
     cursor = db.cursor()
     cursor.execute(
-        """INSERT INTO Compras (EmpresaID, ChaveAcessoNFCe, ValorTotal, 
-            ValorDescontos, ValorPago, FormaPagamento, DataEmissao, 
+        """INSERT INTO Compras (EmpresaID, ChaveAcessoNFCe, TotalCompra, 
+            Desconto, ValorPago, FormaPagamento, DataEmissao, 
             DataAutorizacao, Situacao, DanfeNumero, DanfeSerie, Protocolo, HashArquivo) 
-           VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
         (
             purchase['EmpresaID'],
             purchase['ChaveAcessoNFCe'],
-            purchase['ValorTotal'],
-            purchase['ValorDescontos'],
+            purchase['TotalCompra'],
+            purchase['Desconto'],
             purchase['ValorPago'],
             purchase['FormaPagamento'],
-            purchase['DataEmissao'],
-            purchase['DataAutorizacao'],
+            dth.parse_datetime(purchase['DataEmissao']),
+            dth.parse_datetime(purchase['DataAutorizacao']),
             purchase['Situacao'],
-            purchase.get('DanfeNumero'),
-            purchase.get('DanfeSerie'),
-            purchase.get('Protocolo'),
+            purchase['DanfeNumero'],
+            purchase['DanfeSerie'],
+            purchase['Protocolo'],
             purchase['HashArquivo']
         )
     )
@@ -33,14 +35,13 @@ def insert(db, purchase):
 def insert_item(db, item):
     cursor = db.cursor()
     cursor.execute(
-        """INSERT INTO ItensCompra (CompraID, ProdutoID, Quantidade, Preco, PrecoTotal) 
-           VALUES (%s, %s, %s, %s, %s)""",
+        """INSERT INTO ItensCompra (CompraID, ProdutoID, Quantidade, Preco) 
+           VALUES (%s, %s, %s, %s)""",
         (
             item['CompraID'],
             item['ProdutoID'],
             item['Quantidade'],
-            item['Preco'],
-            item['PrecoTotal']
+            item['Preco']
         )
     )
     db.commit()

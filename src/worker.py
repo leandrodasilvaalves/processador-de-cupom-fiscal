@@ -2,7 +2,7 @@ import os
 from config.log_config import logger
 from database import db_purchase
 from services import company_service, hash_calculator, nfce_extractor
-
+from services import purchase_service
 
 def run(db):
     logger.info("Starting processing...")
@@ -24,7 +24,12 @@ def run(db):
         
         else:
             data = nfce_extractor.extract_nfce_data(file_path)
+
             company_id = company_service.process(db, data['Emissor'])
             logger.info("Processed company", company_id=company_id)
+            
+            purchase_id = purchase_service.process(db, data, company_id, file_hash)
+            logger.info("Created purchase record", purchase_id=purchase_id)
+
            
            
