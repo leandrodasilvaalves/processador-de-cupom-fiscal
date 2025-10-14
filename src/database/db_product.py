@@ -1,7 +1,11 @@
 def get_by_name(db, name):
     cursor = db.cursor()
     cursor.execute("SELECT * FROM produtos WHERE nome = %s", (name,))
-    return cursor.fetchone()
+    row = cursor.fetchone()
+    if row is None:
+        return None
+    columns = [desc[0] for desc in cursor.description]
+    return dict(zip(columns, row))
 
 def insert(db, product):
     cursor = db.cursor()
