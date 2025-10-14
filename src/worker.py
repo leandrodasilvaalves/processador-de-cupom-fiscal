@@ -24,7 +24,7 @@ def run(db):
         else:
             data = nfce_extractor.extract_nfce_data(file_path)
 
-            company_id = company_service.process(db, data['emissor'])
+            company_id = company_service.process(db, data['empresa'])
             logger.info("Processed company", company_id=company_id)
             
             purchase_id = purchase_service.process(db, data, company_id, file_hash)
