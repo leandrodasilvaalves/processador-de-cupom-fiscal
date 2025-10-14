@@ -1,25 +1,24 @@
-import os
 from config.log_config import logger
 from database import db_purchase
 from services import company_service, hash_calculator, nfce_extractor
 from services import purchase_service
+from services import file_service
 
 def run(db):
     logger.info("Starting processing...")
 
-    pending_dir = "./pdf-files/pending"
-    pending_files = os.listdir(pending_dir)
-    logger.info("Found pending files", count=len(pending_files))
+    pending_files = file_service.read_pending()
 
     for file in pending_files:
         logger.info("Processing file", file_name=file)
-        file_path = os.path.join(pending_dir, file)
         
+        file_path = file_service.get_file_path(file)
         file_hash = hash_calculator.calculate(file_path)
         logger.info("Calculated hash", file_name=file, hash=file_hash)
 
         if db_purchase.get_by_hash_file(db, file_hash):
             logger.info("File already processed, skipping", file_name=file, hash=file_hash)
+            file_service.move_to_processed(file)
             continue
         
         else:
@@ -33,6 +32,4 @@ def run(db):
 
             purchase_service.process_items(db, data['itens'], purchase_id)
             logger.info("Processed purchase items", purchase_id=purchase_id, item_count=len(data['itens']))
-
-           
-           
+            file_service.move_to_processed(file)

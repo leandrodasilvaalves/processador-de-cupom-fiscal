@@ -21,6 +21,7 @@ def process_items(db, items, purchase_id):
         item['compra_id'] = purchase_id
         item['quantidade'] = float(item['quantidade'])
         item['preco'] = float(item['preco'])
+        item['total'] = float(item['total'])
         if 'desconto' in item:
             item['desconto'] = float(item['desconto'])
        

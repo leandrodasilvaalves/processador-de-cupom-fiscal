@@ -35,13 +35,16 @@ def insert(db, purchase):
 def insert_item(db, item):
     cursor = db.cursor()
     cursor.execute(
-        """INSERT INTO compras_items (compra_id, produto_id, quantidade, preco) 
-           VALUES (%s, %s, %s, %s)""",
+        """INSERT INTO compras_items 
+            (compra_id, produto_id, quantidade, preco, total, unidade) 
+           VALUES (%s, %s, %s, %s, %s, %s)""",
         (
             item['compra_id'],
             item['produto_id'],
             item['quantidade'],
-            item['preco']
+            item['preco'],
+            item['total'],
+            item['unidade']
         )
     )
     db.commit()

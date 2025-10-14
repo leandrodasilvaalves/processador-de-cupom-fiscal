@@ -54,9 +54,11 @@ def setup_database(db):
             id INT AUTO_INCREMENT PRIMARY KEY,
             compra_id INT,
             produto_id INT,
-            quantidade INT NOT NULL,            
+            quantidade DECIMAL(10, 5) NOT NULL, 
+            unidade VARCHAR(10) NOT NULL,           
             preco DECIMAL(10, 2) NOT NULL,
             desconto DECIMAL(10, 2) DEFAULT 0,
+            total DECIMAL(10, 2) NOT NULL,
             FOREIGN KEY (compra_id) REFERENCES compras(id),
             FOREIGN KEY (produto_id) REFERENCES produtos(id)
         )
