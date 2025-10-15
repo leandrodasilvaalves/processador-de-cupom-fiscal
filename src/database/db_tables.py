@@ -6,13 +6,27 @@ def setup_database(db):
 
     logger.info("Creating tables if they do not exist...")
     cursor.execute("""
+        CREATE TABLE IF NOT EXISTS ramos_atividade (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            descricao VARCHAR(100) NOT NULL,
+            data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )
+    """)
+
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS empresas (
             id INT AUTO_INCREMENT PRIMARY KEY,
             razao_social VARCHAR(150) NOT NULL,
             nome_fantasia VARCHAR(150),
             cnpj CHAR(14) NOT NULL UNIQUE,
             ie CHAR(20),
-            endereco VARCHAR(255)
+            endereco VARCHAR(255),
+            data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            ramos_atividade_id INT NULL, 
+            FOREIGN KEY (ramos_atividade_id) REFERENCES ramos_atividade(id) ON DELETE SET NULL,
+            INDEX idx_empresas_cnpj (cnpj)
         )
     """)
 
@@ -59,7 +73,7 @@ def setup_database(db):
             preco DECIMAL(10, 2) NOT NULL,
             desconto DECIMAL(10, 2) DEFAULT 0,
             total DECIMAL(10, 2) NOT NULL,
-            FOREIGN KEY (compra_id) REFERENCES compras(id),
-            FOREIGN KEY (produto_id) REFERENCES produtos(id)
+            FOREIGN KEY (compra_id) REFERENCES compras(id) ON DELETE CASCADE,
+            FOREIGN KEY (produto_id) REFERENCES produtos(id) ON DELETE SET NULL 
         )
     """)

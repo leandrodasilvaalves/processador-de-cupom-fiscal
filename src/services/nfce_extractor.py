@@ -1,10 +1,8 @@
 import pdfplumber
 import re
 import os
-import logging
 from typing import Dict, Any
-
-logger = logging.getLogger(__name__)
+from config.log_config import logger
 
 def __extract_company_info(text: str) -> Dict[str, Any]:
     cnpj_match = re.search(r"CNPJ:\s*([\d./-]+)\s*\|\s*IE:\s*([\d.-]+)", text)

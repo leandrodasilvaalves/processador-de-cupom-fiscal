@@ -1,11 +1,14 @@
 import mysql.connector as connector
+from mysql.connector.pooling import PooledMySQLConnection
 import os
 from dotenv import load_dotenv
 from config.log_config import logger
 
-__db = None
+__db : PooledMySQLConnection = None
 
 def connect():
+    global __db 
+    
     load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
     logger.info("Connecting to the database...")
     
@@ -15,9 +18,9 @@ def connect():
         password=os.getenv("MYSQL_PASSWORD"),
         database=os.getenv("MYSQL_DATABASE")
     )
-    return __db
+    return __db 
 
 def close():
-    if __db.is_connected():
+    if __db is not None and __db.is_connected():
         __db.close()
         logger.info("Database connection closed.")
