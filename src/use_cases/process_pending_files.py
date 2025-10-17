@@ -3,9 +3,11 @@ from database import db_purchase
 from services import company_service, hash_calculator, nfce_extractor
 from services import purchase_service
 from services import file_service
+from database import db as _db
 
-def run(db):
+def process():
     logger.info("Starting processing...")
+    db = _db.connect()
 
     pending_files = file_service.read_pending()
 
@@ -33,3 +35,5 @@ def run(db):
             purchase_service.process_items(db, data['itens'], purchase_id)
             logger.info("Processed purchase items", purchase_id=purchase_id, item_count=len(data['itens']))
             file_service.move_to_processed(file)
+
+    _db.close()

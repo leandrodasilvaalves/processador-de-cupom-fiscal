@@ -1,7 +1,26 @@
 services:
+  processador:
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+    container_name: ${CONTAINER_PREFIX}.processador
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - cupom-fiscal-net
+    volumes:
+      - ./pdf-files:/app/pdf-files
+      
+
   mysql:
     image: mysql:8.0-debian
-    container_name: pythonlab.mysql
+    container_name: ${CONTAINER_PREFIX}.mysql
     environment:
       MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
       MYSQL_DATABASE: '${MYSQL_DATABASE}'
@@ -16,10 +35,13 @@ services:
       retries: 5
     volumes:
       - ./db-data:/var/lib/mysql
+    networks:
+      - cupom-fiscal-net
+
 
   phpmyadmin:
     image: phpmyadmin:5.2.1
-    container_name: pythonlab.phpmyadmin
+    container_name: ${CONTAINER_PREFIX}.phpmyadmin
     ports:
       - "8082:80"
     environment:
@@ -29,7 +51,10 @@ services:
       PMA_ARBITRARY: 1
     depends_on:
       mysql:
-        condition: service_healthy         
+        condition: service_healthy  
+    networks:
+      - cupom-fiscal-net
+
 
 networks:
   cupom-fiscal-net:

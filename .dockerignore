@@ -1,0 +1,19 @@
+# Ignorar arquivos e diretórios do Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+venv/
+.venv/
+
+# Ignorar o ambiente Docker
+.dockerignore
+Dockerfile
+
+# Ignorar sistema de controle de versão
+.git
+.gitignore
+
+# Outros arquivos grandes ou temporários
+*.log
+tmp/
