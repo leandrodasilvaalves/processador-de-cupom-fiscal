@@ -15,7 +15,7 @@ services:
   processador:
     build:
       context: .
-      dockerfile: src/Dockerfile
+      dockerfile: worker_app/Dockerfile
     container_name: ${CONTAINER_PREFIX}.processador
     image: processador-de-cupom-fiscal:latest
     environment:

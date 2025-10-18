@@ -5,7 +5,7 @@
       "type": "debugpy",
       "request": "launch",
       "name": "Launch Main Program",
-      "program": "${workspaceFolder}/src/program.py",
+      "program": "${workspaceFolder}/worker_app/program.py",
       "console": "integratedTerminal",
       "envFile": "${workspaceFolder}/.env",
       "preLaunchTask": "load pending files" 
