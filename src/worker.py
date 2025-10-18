@@ -36,4 +36,6 @@ def process():
             logger.info("Processed purchase items", purchase_id=purchase_id, item_count=len(data['itens']))
             file_service.move_to_processed(file)
 
+    logger.info("Processing completed. Pending files count: %d", len(pending_files))
+
     _db.close()
