@@ -1,14 +1,35 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "debugpy",
-      "request": "launch",
-      "name": "Launch Main Program",
-      "program": "${workspaceFolder}/worker_app/program.py",
-      "console": "integratedTerminal",
-      "envFile": "${workspaceFolder}/.env",
-      "preLaunchTask": "load pending files" 
-    }
-  ]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Worker",
+            "program": "${workspaceFolder}/src/worker_app/program.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "preLaunchTask": "load pending files",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
+        },
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Webapi",
+            "module": "uvicorn",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "src.webapi.program:app",
+                // "--reload"
+            ],
+            "justMyCode": true,
+            "jinja": true,
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
+        }
+    ]
 }

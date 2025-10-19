@@ -7,6 +7,7 @@ pending_dir = "./pdf-files/pending"
 processed_dir = "./pdf-files/processed"
 
 def read_pending():
+    logger.info("Reading pending files from directory", directory=pending_dir)
     pending_files = os.listdir(pending_dir)
     logger.info("Found pending files", count=len(pending_files))
     return pending_files

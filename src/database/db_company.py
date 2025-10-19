@@ -1,5 +1,10 @@
 from helpers.string_helper import extract_numbers
 
+def get_all_companies(db):
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM empresas")
+    return cursor.fetchall()
+
 def get_by_cnpj(db, cnpj):
     cursor = db.cursor()
     cursor.execute("SELECT * FROM empresas WHERE cnpj = %s", (cnpj,))

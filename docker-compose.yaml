@@ -1,7 +1,7 @@
 services:
   iniciador:
     image: ubuntu:22.04
-    container_name: ${CONTAINER_PREFIX}.ubuntu
+    container_name: ${CONTAINER_PREFIX}.iniciador
     networks:
       - cupom-fiscal-dev
     cpus: 0.1
@@ -10,12 +10,13 @@ services:
       - ./pdf-files:/pdf-files
       - ./scripts/load-pending-files.sh:/script.sh
     entrypoint: ["/bin/bash", "/script.sh"]
+    user: "${UID}:${GID}" # Executa com o UID e GID do usuário host
     
 
-  processador:
+  worker_app:
     build:
       context: .
-      dockerfile: worker_app/Dockerfile
+      dockerfile: src/worker_app/Dockerfile
     container_name: ${CONTAINER_PREFIX}.processador
     image: processador-de-cupom-fiscal:latest
     environment:
@@ -33,7 +34,6 @@ services:
       - ./pdf-files:/app/pdf-files
     cpus: 0.25
     mem_limit: 128M
-    restart: always
       
 
   mysql:
