@@ -13,12 +13,37 @@ services:
     user: "${UID}:${GID}" # Executa com o UID e GID do usuário host
     
 
+  webapi:
+    build:
+      context: .
+      dockerfile: src/webapi/Dockerfile
+    container_name: ${CONTAINER_PREFIX}.api.processador
+    image: api.processador-de-cupom-fiscal:latest
+    ports:
+      - "8081:8000"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+      MYSQL_PORT: ${MYSQL_PORT}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - cupom-fiscal-dev
+    volumes:
+      - ./pdf-files:/app/pdf-files
+    cpus: 0.25
+    mem_limit: 128M
+    
+  
   worker_app:
     build:
       context: .
       dockerfile: src/worker_app/Dockerfile
     container_name: ${CONTAINER_PREFIX}.processador
-    image: processador-de-cupom-fiscal:latest
+    image: worker.processador-de-cupom-fiscal:latest
     environment:
       MYSQL_HOST: mysql
       MYSQL_DATABASE: '${MYSQL_DATABASE}'

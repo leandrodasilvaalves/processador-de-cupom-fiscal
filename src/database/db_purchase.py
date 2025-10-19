@@ -5,6 +5,23 @@ def get_by_hash_file(db, hash_file):
     cursor.execute("SELECT * FROM compras WHERE hash_arquivo = %s", (hash_file,))
     return cursor.fetchone()
 
+
+def get_by_company(db, company_id):
+    cursor = db.cursor()
+    cursor.execute(""" 
+        SELECT 
+            c.id, c.total_compra, c.desconto, 
+            c.valor_pago, c.forma_pagamento,
+            e.nome_fantasia, e.razao_social
+        FROM compras c 
+        LEFT JOIN empresas e ON e.id = c.empresa_id
+        WHERE empresa_id = %s
+    """, (company_id,))
+    purchases =  cursor.fetchall()
+    columns = [desc[0] for desc in cursor.description]
+    return [dict(zip(columns, row)) for row in purchases]
+
+
 def insert(db, purchase):
     cursor = db.cursor()
     cursor.execute(

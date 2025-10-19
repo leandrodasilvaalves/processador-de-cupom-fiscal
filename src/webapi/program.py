@@ -1,27 +1,15 @@
 from fastapi import FastAPI
+from .routers import company_router, line_of_business_router
 
-app = FastAPI()
+app = FastAPI(
+    title="Processador de Cupom Fiscal",
+    description="API para processar cupons fiscais e gerenciar empresas.",
+    version="1.0.0.beta",
+)
 
-items = [
-    {"nome": "maçã", "preco": 1.50},
-    {"nome": "banana", "preco": 0.75},
-    {"nome": "laranja", "preco": 1.20},
-]
-
-@app.get("/")
+@app.get("/hc")
 def home():
-    """Endpoint de boas-vindas."""
-    return {"mensagem": "Olá, Mundo! Sua primeira API com FastAPI está funcionando."}
+    return {"status": "Healthy"}
 
-# @app.get("/empresas")
-# def listar_empresas():
-#     empresas = db_company.get_all_companies(db)
-#     return {"empresas": empresas}
-
-@app.get("/items/{item_id}")
-def buscar_item(item_id: int):
-    """Busca um item específico pelo seu ID (índice na lista)."""
-    try:
-        return items[item_id]
-    except IndexError:
-        return {"erro": "Item não encontrado."}
+app.include_router(company_router.router)
+app.include_router(line_of_business_router.router)
