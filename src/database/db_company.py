@@ -6,8 +6,10 @@ def get_all_companies(db):
     cursor.execute(
         """
         SELECT 
-            e.Id, e.nome_fantasia, e.razao_social, e.cnpj, e.ramos_atividade_id, 
-            ra.descricao as ramos_atividade 
+            e.Id, e.nome_fantasia, e.razao_social, e.cnpj, 
+            e.ramos_atividade_id, 
+            ra.descricao as ramos_atividade,
+            e.endereco
         FROM empresas e LEFT JOIN ramos_atividade ra 
         ON ra.id = e.ramos_atividade_id;
     """

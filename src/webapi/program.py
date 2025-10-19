@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import company_router, line_of_business_router
+from .routers import company_router, line_of_business_router, purchase_router
 
 app = FastAPI(
     title="Processador de Cupom Fiscal",
@@ -13,3 +13,4 @@ def home():
 
 app.include_router(company_router.router)
 app.include_router(line_of_business_router.router)
+app.include_router(purchase_router.router)
