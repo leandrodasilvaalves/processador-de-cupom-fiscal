@@ -2,9 +2,9 @@ from database import db_purchase, db_product
 from services import product_service
 
 
-def process(db, data, company_id, file_hash):
+def process(db, data, company, file_hash):
     purchase = {}
-    purchase['empresa_id'] = company_id
+    purchase['empresa_id'] = company[0]
     purchase['chave_acesso_nfce'] = data['rodape']['chave_acesso_nfce']
     purchase['total_compra'] = float(data['totais']['total_compra'])
     purchase['desconto'] = float(data['totais']['desconto'])
@@ -17,6 +17,7 @@ def process(db, data, company_id, file_hash):
     purchase['danfe_serie'] = data['danfe']['serie']
     purchase['protocolo'] = data['rodape']['protocolo']
     purchase['hash_arquivo'] = file_hash
+    purchase['ramos_atividade_id'] = company[1]
 
     purchase_id = db_purchase.insert(db, purchase)
     return purchase_id

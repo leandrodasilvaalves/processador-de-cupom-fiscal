@@ -26,10 +26,10 @@ def process():
         else:
             data = nfce_extractor.extract_nfce_data(file_path)
 
-            company_id = company_service.process(db, data['empresa'])
-            logger.info("Processed company", company_id=company_id)
+            company = company_service.process(db, data['empresa'])
+            logger.info("Processed company", company_id=company[0])
             
-            purchase_id = purchase_service.process(db, data, company_id, file_hash)
+            purchase_id = purchase_service.process(db, data, company, file_hash)
             logger.info("Created purchase record", purchase_id=purchase_id)
 
             purchase_service.process_items(db, data['itens'], purchase_id)

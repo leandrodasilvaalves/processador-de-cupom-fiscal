@@ -30,6 +30,27 @@
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/src"
             }
+        },
+        {
+            "name": "Docker Build Images",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "docker compose build --no-cache",
+            "env": {                
+                "TAG_VERSION": "${input:ImageTagInput}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+        }
+    ],
+    "inputs": [
+        {
+            "id": "ImageTagInput",
+            "type": "promptString",
+            "description": "Informe a TAG da imagem (ex: 1.0.0 ou latest)",
+            "default": "latest"
         }
     ]
 }

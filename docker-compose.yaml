@@ -18,7 +18,7 @@ services:
       context: .
       dockerfile: src/webapi/Dockerfile
     container_name: ${CONTAINER_PREFIX}.api.processador
-    image: api.processador-de-cupom-fiscal:latest
+    image: api.processador-de-cupom-fiscal:${TAG_VERSION:-latest}
     ports:
       - "8081:8000"
     environment:
@@ -43,7 +43,7 @@ services:
       context: .
       dockerfile: src/worker_app/Dockerfile
     container_name: ${CONTAINER_PREFIX}.processador
-    image: worker.processador-de-cupom-fiscal:latest
+    image: worker.processador-de-cupom-fiscal:${TAG_VERSION:-latest}
     environment:
       MYSQL_HOST: mysql
       MYSQL_DATABASE: '${MYSQL_DATABASE}'

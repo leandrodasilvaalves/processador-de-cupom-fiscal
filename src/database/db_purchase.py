@@ -69,8 +69,9 @@ def insert(db, purchase):
     cursor.execute(
         """INSERT INTO compras (empresa_id, chave_acesso_nfce, total_compra, 
             desconto, valor_pago, forma_pagamento, data_emissao, 
-            data_autorizacao, situacao, danfe_numero, danfe_serie, protocolo, hash_arquivo) 
-           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+            data_autorizacao, situacao, danfe_numero, danfe_serie, protocolo, 
+            hash_arquivo, ramos_atividade_id) 
+           VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
         (
             purchase["empresa_id"],
             purchase["chave_acesso_nfce"],
@@ -85,6 +86,7 @@ def insert(db, purchase):
             purchase["danfe_serie"],
             purchase["protocolo"],
             purchase["hash_arquivo"],
+            purchase["ramos_atividade_id"]
         ),
     )
     db.commit()
