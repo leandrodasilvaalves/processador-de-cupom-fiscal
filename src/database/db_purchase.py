@@ -1,3 +1,5 @@
+from entities.purchase import Purchase
+from entities.purchase_item import PurchaseItem
 from helpers import datetime_helper as dth
 
 
@@ -64,7 +66,7 @@ def get_items(db, purchase_id):
     return [dict(zip(columns, row)) for row in items]
 
 
-def insert(db, purchase):
+def insert(db, purchase: Purchase):
     cursor = db.cursor()
     cursor.execute(
         """INSERT INTO compras (empresa_id, chave_acesso_nfce, total_compra, 
@@ -73,39 +75,39 @@ def insert(db, purchase):
             hash_arquivo, ramos_atividade_id) 
            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
         (
-            purchase["empresa_id"],
-            purchase["chave_acesso_nfce"],
-            purchase["total_compra"],
-            purchase["desconto"],
-            purchase["valor_pago"],
-            purchase["forma_pagamento"],
-            dth.parse_datetime(purchase["data_emissao"]),
-            dth.parse_datetime(purchase["data_autorizacao"]),
-            purchase["situacao"],
-            purchase["danfe_numero"],
-            purchase["danfe_serie"],
-            purchase["protocolo"],
-            purchase["hash_arquivo"],
-            purchase["ramos_atividade_id"]
+            purchase.company_id,
+            purchase.nfce_access_key,
+            purchase.purchase_total,
+            purchase.discount,
+            purchase.paid_amount,
+            purchase.payment_method,
+            dth.parse_datetime(purchase.issue_date),
+            dth.parse_datetime(purchase.authorization_date),
+            purchase.situation,
+            purchase.danfe_number,
+            purchase.danfe_series,
+            purchase.protocol,
+            purchase.file_hash,
+            purchase.line_of_business
         ),
     )
     db.commit()
     return cursor.lastrowid
 
 
-def insert_item(db, item):
+def insert_item(db, item:PurchaseItem):
     cursor = db.cursor()
     cursor.execute(
         """INSERT INTO compras_items 
             (compra_id, produto_id, quantidade, preco, total, unidade) 
            VALUES (%s, %s, %s, %s, %s, %s)""",
         (
-            item["compra_id"],
-            item["produto_id"],
-            item["quantidade"],
-            item["preco"],
-            item["total"],
-            item["unidade"],
+            item.purchase_id,
+            item.product_id,
+            item.quantity,
+            item.price,
+            item.total,
+            item.unity,
         ),
     )
     db.commit()

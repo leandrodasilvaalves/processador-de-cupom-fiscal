@@ -24,16 +24,17 @@ def process():
             continue
         
         else:
-            data = nfce_extractor.extract_nfce_data(file_path)
+            receipt = nfce_extractor.extract_nfce_data(file_path)
+            receipt.with_file_hash(file_hash)
 
-            company = company_service.process(db, data['empresa'])
+            company = company_service.process(db, receipt.company)
+            receipt.with_company(company[0])
+            receipt.with_line_of_business(company[1])
             logger.info("Processed company", company_id=company[0])
             
-            purchase_id = purchase_service.process(db, data, company, file_hash)
-            logger.info("Created purchase record", purchase_id=purchase_id)
+            purchase_id = purchase_service.process(db, receipt.purchase)
+            logger.info("Created purchase record", purchase_id=purchase_id, item_count=len(receipt.purchase.items))
 
-            purchase_service.process_items(db, data['itens'], purchase_id)
-            logger.info("Processed purchase items", purchase_id=purchase_id, item_count=len(data['itens']))
             file_service.move_to_processed(file)
 
     logger.info("Processing completed. Pending files count: %d", len(pending_files))

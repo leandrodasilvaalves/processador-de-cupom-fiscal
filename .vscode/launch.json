@@ -4,6 +4,18 @@
         {
             "type": "debugpy",
             "request": "launch",
+            "name": "temp",
+            // "program": "${workspaceFolder}/src/entities/purchase.py",
+            "program": "${workspaceFolder}/src/entities/company.py",
+            "console": "integratedTerminal",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
+        },
+        {
+            "type": "debugpy",
+            "request": "launch",
             "name": "Worker",
             "program": "${workspaceFolder}/src/worker_app/program.py",
             "console": "integratedTerminal",

@@ -1,3 +1,4 @@
+from entities.company import Company
 from helpers.string_helper import extract_numbers
 
 
@@ -18,6 +19,7 @@ def get_all_companies(db):
     columns = [desc[0] for desc in cursor.description]
     return [dict(zip(columns, row)) for row in companies]
 
+
 def get_all_companies_without_line_of_business(db):
     cursor = db.cursor()
     cursor.execute(
@@ -33,29 +35,30 @@ def get_all_companies_without_line_of_business(db):
     return [dict(zip(columns, row)) for row in companies]
 
 
-def get_by_cnpj(db, cnpj):
+def get_by_cnpj(db, cnpj: str):
     cursor = db.cursor()
     cursor.execute("SELECT * FROM empresas WHERE cnpj = %s", (cnpj,))
     return cursor.fetchone()
 
 
-def insert(db, company):
+def insert(db, company: Company):
     cursor = db.cursor()
     cursor.execute(
         """INSERT INTO empresas (razao_social, nome_fantasia, cnpj, ie, endereco) 
            VALUES (%s, %s, %s, %s, %s)""",
         (
-            company["razao_social"],
-            company["nome_fantasia"],
-            extract_numbers(company["cnpj"]),
-            extract_numbers(company["ie"]),
-            company["endereco"],
+            company.corporate_name,
+            company.trade_name,
+            extract_numbers(company.cnpj),
+            extract_numbers(company.ie),
+            company.address,
         ),
     )
     db.commit()
     return cursor.lastrowid
 
-def update_company_activity_branch(db, company_id, ramo_atividade_id):
+
+def update_company_activity_branch(db, company_id: int, ramo_atividade_id: int):
     cursor = db.cursor()
     cursor.execute(
         """UPDATE empresas 

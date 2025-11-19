@@ -1,17 +1,15 @@
 from database import db_product
+from entities.Product import Product
+from entities.purchase_item import PurchaseItem
 
 
-def process(db, purchase_item):
-    product = db_product.get_by_name(db, purchase_item["descricao"])
+def process(db, item:PurchaseItem) -> Product:
+    product = db_product.get_by_name(db, item.description)
     if product:
         return product
 
-    product = {
-        "nome": purchase_item["descricao"],
-        "preco": float(purchase_item["preco"]),
-        "unidade": purchase_item["unidade"],
-    }
+    product = Product(item)
     
-    product_id = db_product.insert(db, product)
-    product["id"] = product_id
+    id = db_product.insert(db, product)
+    product.with_id(id)
     return product
