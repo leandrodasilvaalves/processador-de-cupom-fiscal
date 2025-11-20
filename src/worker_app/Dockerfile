@@ -10,6 +10,7 @@ COPY ./src/database ./database
 COPY ./src/helpers ./helpers
 COPY ./src/services ./services
 COPY ./src/worker_app ./worker_app
+COPY ./src/entities ./entities
 
 ENV PYTHONPATH=/app/src
 WORKDIR /app

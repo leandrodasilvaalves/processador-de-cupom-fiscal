@@ -1,7 +1,6 @@
 import re
 from entities.purchase_item import PurchaseItem
 from entities.entitity import Entity
-import pdfplumber
 
 
 class Purchase(Entity):
@@ -181,23 +180,3 @@ class Purchase(Entity):
         self.danfe_number = text
         self.danfe_series = text
         self.append_items(text)
-
-
-if __name__ == "__main__":
-    purchase = Purchase()
-    with pdfplumber.open(
-        "/home/leandro/workspace/python/processador-de-cupom-fiscal/pdf-files/pending/NFC-e Consulta para dispositivos móveis copy.pdf"
-    ) as pdf:
-        for page in pdf.pages:
-            text = page.extract_text()
-            purchase.load(text)
-
-    with pdfplumber.open(
-        "/home/leandro/workspace/python/processador-de-cupom-fiscal/pdf-files/pending/NFC-e Consulta para dispositivos móveis-7.pdf"
-    ) as pdf:
-        for page in pdf.pages:
-            text = page.extract_text()
-            purchase.load(text)
-
-    print(purchase.to_json())
-    print("total itens:", len(purchase.items))

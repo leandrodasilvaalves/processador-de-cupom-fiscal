@@ -1,5 +1,4 @@
 from entities.entitity import Entity
-import pdfplumber
 
 
 class Company(Entity):
@@ -85,20 +84,4 @@ class Company(Entity):
         self.corporate_name = text
         self.trade_name = text
         self.address = text
-
-
-if __name__ == "__main__":
-    company = Company()
-    with pdfplumber.open(
-        "/home/leandro/workspace/python/processador-de-cupom-fiscal/pdf-files/pending/NFC-e Consulta para dispositivos móveis copy.pdf"
-    ) as pdf:
-        text = pdf.pages[0].extract_text()
-        company.load(text)
-
-    with pdfplumber.open(
-        "/home/leandro/workspace/python/processador-de-cupom-fiscal/pdf-files/pending/NFC-e Consulta para dispositivos móveis-7.pdf"
-    ) as pdf:
-        text = pdf.pages[0].extract_text()
-        company.load(text)
-
-    print(company.to_json())
+        
