@@ -8,6 +8,10 @@ def get_by_hash_file(db, hash_file):
     cursor.execute("SELECT * FROM compras WHERE hash_arquivo = %s", (hash_file,))
     return cursor.fetchone()
 
+def get_by_nfce(db, access_key:str):
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM compras WHERE chave_acesso_nfce = %s", (access_key,))
+    return cursor.fetchone()
 
 def get_all_purchases(db):
     cursor = db.cursor()
