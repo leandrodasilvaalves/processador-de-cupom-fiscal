@@ -1,3 +1,6 @@
+from config.otel_config import configure_otel
+configure_otel("worker_app")
+
 from config.log_config import logger
 from database import db_tables
 from database.db import connect, close as db_close

@@ -27,6 +27,9 @@ services:
       MYSQL_USER: '${MYSQL_USER}'
       MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
       MYSQL_PORT: ${MYSQL_PORT}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana:4318
+      OTEL_SERVICE_NAME: webapi
+      OTEL_DEPLOYMENT_ENVIRONMENT: development
     depends_on:
       mysql:
         condition: service_healthy
@@ -51,6 +54,9 @@ services:
       MYSQL_USER: '${MYSQL_USER}'
       MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
       MYSQL_PORT: ${MYSQL_PORT}
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana:4318
+      OTEL_SERVICE_NAME: worker_app
+      OTEL_DEPLOYMENT_ENVIRONMENT: development
     depends_on:
       mysql:
         condition: service_healthy
@@ -105,22 +111,22 @@ services:
     mem_limit: 128M
     restart: always
 
-  # grafana:
-  #   image: grafana/otel-lgtm:0.6.0
-  #   container_name: ${CONTAINER_PREFIX}.grafana-otel-lgtm
-  #   ports:
-  #     - 3100:3000
-  #     - 4317:4317
-  #     - 4318:4318
-  #   environment:
-  #     - OTEL_METRIC_EXPORT_INTERVAL=1000
-  #     - GF_AUTH_ANONYMOUS_ENABLED=true
-  #     - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-  #     - GF_AUTH_DISABLE_LOGIN_FORM=true
-  #   mem_limit: 200M
-  #   cpus: 0.25
-  #   networks:
-  #     - cupom-fiscal-dev
+  grafana:
+    image: grafana/otel-lgtm:0.6.0
+    container_name: ${CONTAINER_PREFIX}.grafana-otel-lgtm
+    ports:
+      - 3110:3000
+      - 4327:4317
+      - 4328:4318
+    environment:
+      - OTEL_METRIC_EXPORT_INTERVAL=1000
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    mem_limit: 200M
+    cpus: 0.25
+    networks:
+      - cupom-fiscal-dev
 
 
 networks:
