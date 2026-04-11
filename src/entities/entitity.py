@@ -20,4 +20,7 @@ class Entity(ABC):
     
     @staticmethod
     def _to_float(s) -> float:
-        return 0.0 if s is None else float(s.replace(",", "."))
+        if s is None:
+            return 0.0
+        # Remove separador de milhar (ponto) e converte vírgula decimal para ponto
+        return float(s.replace(".", "").replace(",", "."))

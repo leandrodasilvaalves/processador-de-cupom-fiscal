@@ -17,10 +17,11 @@ def extract_nfce_data(file_path: str) -> Receipt:
 
             company = Company()
             purchase = Purchase()
-            for page in pdf.pages:
-                full_text = page.extract_text()
-                company.load(full_text)
-                purchase.load(full_text)
+            full_text = "\n".join(
+                page.extract_text() or "" for page in pdf.pages
+            )
+            company.load(full_text)
+            purchase.load(full_text)
 
             receipt = Receipt(company, purchase)
             return receipt
