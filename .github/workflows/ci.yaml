@@ -29,7 +29,7 @@ jobs:
       - name: Install worker dependencies
         run: pip install -r src/worker_app/requirements.txt
       - name: Install test dependencies
-        run: pip install pytest pytest-cov hypothesis opentelemetry-sdk
+        run: pip install pytest pytest-cov hypothesis opentelemetry-sdk flake8
       - name: Lint with flake8
         run: flake8 src/ --max-line-length=120
 
