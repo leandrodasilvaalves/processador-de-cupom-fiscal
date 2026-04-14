@@ -105,7 +105,10 @@ def _make_app_with_log_capture(buf: io.StringIO):
 
 @given(
     method=st.sampled_from(["GET", "POST", "PUT"]),
-    path_suffix=st.text(min_size=1, max_size=20, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="-_")),
+    path_suffix=st.text(
+        min_size=1, max_size=20,
+        alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="-_")
+    ),
 )
 @settings(max_examples=30)
 def test_p12_request_log_has_required_fields(method, path_suffix):

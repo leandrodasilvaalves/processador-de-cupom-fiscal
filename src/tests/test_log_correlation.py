@@ -97,8 +97,8 @@ def test_p3_log_contains_correct_trace_and_span_ids(trace_id, span_id):
 
     expected_trace_id = format(trace_id, "032x")
     expected_span_id = format(span_id, "016x")
-    assert data.get("trace_id") == expected_trace_id
-    assert data.get("span_id") == expected_span_id
+    assert data.get("trace_id") == expected_trace_id, f"trace_id mismatch"
+    assert data.get("span_id") == expected_span_id, f"span_id mismatch"
 
 
 # ---------------------------------------------------------------------------

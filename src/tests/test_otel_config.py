@@ -74,8 +74,20 @@ def _make_mock_tracer(name: str):
 # ---------------------------------------------------------------------------
 
 @given(
-    service_name=st.text(min_size=1, max_size=30, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-")),
-    deployment_env=st.text(min_size=1, max_size=30, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-")),
+    service_name=st.text(
+        min_size=1, max_size=30,
+        alphabet=st.characters(
+            whitelist_categories=("Lu", "Ll", "Nd"),
+            whitelist_characters="_-"
+        )
+    ),
+    deployment_env=st.text(
+        min_size=1, max_size=30,
+        alphabet=st.characters(
+            whitelist_categories=("Lu", "Ll", "Nd"),
+            whitelist_characters="_-"
+        )
+    ),
 )
 @settings(max_examples=30, deadline=None)
 def test_p1_resource_attributes_reflect_env_config(service_name, deployment_env):
@@ -116,7 +128,10 @@ def test_p1_resource_attributes_reflect_env_config(service_name, deployment_env)
 # Feature: observability-logs-traces, Property 2: Tracer name matches service name
 # ---------------------------------------------------------------------------
 
-@given(service_name=st.text(min_size=1, max_size=30, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-")))
+@given(service_name=st.text(
+    min_size=1, max_size=30,
+    alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-")
+))
 @settings(max_examples=30, deadline=None)
 def test_p2_tracer_name_matches_service_name(service_name):
     # Feature: observability-logs-traces, Property 2: Tracer name matches service name
@@ -180,8 +195,12 @@ def test_p13_otlp_exporter_uses_env_endpoint(endpoint):
     log_endpoint = mock_log_exp.call_args[1].get("endpoint") or (
         mock_log_exp.call_args[0][0] if mock_log_exp.call_args[0] else ""
     )
-    assert endpoint in span_endpoint, f"Expected {endpoint} in span exporter endpoint {span_endpoint}"
-    assert endpoint in log_endpoint, f"Expected {endpoint} in log exporter endpoint {log_endpoint}"
+    assert endpoint in span_endpoint, (
+        f"Expected {endpoint} in span exporter endpoint {span_endpoint}"
+    )
+    assert endpoint in log_endpoint, (
+        f"Expected {endpoint} in log exporter endpoint {log_endpoint}"
+    )
 
 
 # ---------------------------------------------------------------------------

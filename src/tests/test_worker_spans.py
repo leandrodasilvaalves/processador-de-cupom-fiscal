@@ -81,7 +81,10 @@ def test_p5_processing_cycle_span_has_pending_files_count(pending_files):
 # ---------------------------------------------------------------------------
 
 @given(
-    file_name=st.text(min_size=1, max_size=30, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-.")),
+    file_name=st.text(
+        min_size=1, max_size=30,
+        alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-.")
+    ),
     file_hash_bytes=st.binary(min_size=1, max_size=32),
 )
 @settings(max_examples=20, deadline=None)
@@ -116,7 +119,10 @@ def test_p6_process_file_span_has_skipped_reason_on_duplicate():
 
 @given(
     access_key=st.text(min_size=1, max_size=44, alphabet=st.characters(whitelist_categories=("Nd",))),
-    cnpj=st.text(min_size=1, max_size=18, alphabet=st.characters(whitelist_categories=("Nd",), whitelist_characters="./- ")),
+    cnpj=st.text(
+        min_size=1, max_size=18,
+        alphabet=st.characters(whitelist_categories=("Nd",), whitelist_characters="./- ")
+    ),
 )
 @settings(max_examples=20, deadline=None)
 def test_p7_nfce_extract_span_success_attributes(access_key, cnpj):

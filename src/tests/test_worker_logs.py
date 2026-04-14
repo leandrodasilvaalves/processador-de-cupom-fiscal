@@ -57,7 +57,10 @@ def _parse_all_logs(buf: io.StringIO) -> list:
 # ---------------------------------------------------------------------------
 
 @given(
-    file_name=st.text(min_size=1, max_size=50, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-.")),
+    file_name=st.text(
+        min_size=1, max_size=50,
+        alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-.")
+    ),
     company_id=st.integers(min_value=1, max_value=9999),
     purchase_id=st.integers(min_value=1, max_value=9999),
     item_count=st.integers(min_value=0, max_value=100),
@@ -86,7 +89,10 @@ def test_p11_file_processing_completed_log_has_required_fields(file_name, compan
 
 
 @given(
-    file_name=st.text(min_size=1, max_size=50, alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-.")),
+    file_name=st.text(
+        min_size=1, max_size=50,
+        alphabet=st.characters(whitelist_categories=("Lu", "Ll", "Nd"), whitelist_characters="_-.")
+    ),
     skipped_reason=st.sampled_from(["duplicate_hash", "duplicate_access_key"]),
 )
 @settings(max_examples=30)

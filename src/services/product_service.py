@@ -3,7 +3,7 @@ from entities.Product import Product
 from entities.purchase_item import PurchaseItem
 
 
-def process(db, item:PurchaseItem) -> Product:
+def process(db, item: PurchaseItem) -> Product:
     product = db_product.get_by_name(db, item.description)
     if product:
         return product
