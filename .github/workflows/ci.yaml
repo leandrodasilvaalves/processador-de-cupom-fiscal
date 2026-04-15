@@ -69,7 +69,7 @@ jobs:
       context: .
       dockerfile: src/webapi/Dockerfile
       username: ${{ vars.DOCKERHUB_USERNAME }}
-      image-name: ${{ vars.DOCKERHUB_USERNAME }}/api.processador-de-cupom-fiscal
+      image-name: api.processador-de-cupom-fiscal
       version: ${{ needs.setup.outputs.version }}
       prefix-allowed-branch: develop
     secrets:
@@ -82,7 +82,7 @@ jobs:
       context: .
       dockerfile: src/worker_app/Dockerfile
       username: ${{ vars.DOCKERHUB_USERNAME }}
-      image-name: ${{ vars.DOCKERHUB_USERNAME }}/worker.processador-de-cupom-fiscal
+      image-name: worker.processador-de-cupom-fiscal
       version: ${{ needs.setup.outputs.version }}
       prefix-allowed-branch: develop
     secrets:
