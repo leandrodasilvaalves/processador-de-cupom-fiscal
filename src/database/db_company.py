@@ -19,12 +19,12 @@ def get_all_companies(db):
             cursor = db.cursor()
             cursor.execute(
                 """
-                SELECT 
-                    e.Id, e.nome_fantasia, e.razao_social, e.cnpj, 
-                    e.ramos_atividade_id, 
+                SELECT
+                    e.Id, e.nome_fantasia, e.razao_social, e.cnpj,
+                    e.ramos_atividade_id,
                     ra.descricao as ramos_atividade,
                     e.endereco
-                FROM empresas e LEFT JOIN ramos_atividade ra 
+                FROM empresas e LEFT JOIN ramos_atividade ra
                 ON ra.id = e.ramos_atividade_id;
             """
             )
@@ -47,9 +47,9 @@ def get_all_companies_without_line_of_business(db):
             cursor = db.cursor()
             cursor.execute(
                 """
-                SELECT 
-                    e.Id, e.nome_fantasia, e.razao_social, e.cnpj 
-                FROM empresas e 
+                SELECT
+                    e.Id, e.nome_fantasia, e.razao_social, e.cnpj
+                FROM empresas e
                 WHERE e.ramos_atividade_id IS NULL;
             """
             )
@@ -87,7 +87,7 @@ def insert(db, company: Company):
         try:
             cursor = db.cursor()
             cursor.execute(
-                """INSERT INTO empresas (razao_social, nome_fantasia, cnpj, ie, endereco) 
+                """INSERT INTO empresas (razao_social, nome_fantasia, cnpj, ie, endereco)
                    VALUES (%s, %s, %s, %s, %s)""",
                 (
                     company.corporate_name,
@@ -114,8 +114,8 @@ def update_company_activity_branch(db, company_id: int, ramo_atividade_id: int):
         try:
             cursor = db.cursor()
             cursor.execute(
-                """UPDATE empresas 
-                   SET ramos_atividade_id = %s 
+                """UPDATE empresas
+                   SET ramos_atividade_id = %s
                    WHERE id = %s""",
                 (ramo_atividade_id, company_id),
             )

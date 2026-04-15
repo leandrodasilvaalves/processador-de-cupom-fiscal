@@ -9,7 +9,7 @@ def process(db, item: PurchaseItem) -> Product:
         return product
 
     product = Product(item)
-    
+
     id = db_product.insert(db, product)
     product.with_id(id)
     return product

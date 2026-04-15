@@ -3,8 +3,6 @@ Tests for worker spans.
 Covers: P5 (processing_cycle span), P6 (process_file span), P7 (nfce.extract span)
         + error edge cases.
 """
-import os
-import pytest
 from unittest.mock import patch, MagicMock
 from hypothesis import given, settings
 import hypothesis.strategies as st
@@ -12,7 +10,6 @@ import hypothesis.strategies as st
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry import trace
 from opentelemetry.trace import StatusCode
 
 

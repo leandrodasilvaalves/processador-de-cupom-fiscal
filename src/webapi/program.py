@@ -68,7 +68,7 @@ def home():
     return {"status": "Healthy"}
 
 
-from .routers import company_router, line_of_business_router, purchase_router
+from .routers import company_router, line_of_business_router, purchase_router  # noqa: E402
 
 app.include_router(company_router.router)
 app.include_router(line_of_business_router.router)

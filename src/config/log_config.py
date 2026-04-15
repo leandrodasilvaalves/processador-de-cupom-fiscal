@@ -3,6 +3,7 @@ import logging
 import sys
 from typing import List, Any
 
+
 def configure_logging(extra_processors: List[Any] | None = None):
     base_processors = [
         structlog.stdlib.add_logger_name,

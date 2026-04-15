@@ -2,9 +2,6 @@
 Tests for WebAPI span instrumentation.
 Covers: P9 (HTTP spans), P10 (trace context propagation) + 5xx edge case.
 """
-import os
-import pytest
-from unittest.mock import patch, MagicMock
 from hypothesis import given, settings
 import hypothesis.strategies as st
 
@@ -12,7 +9,6 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.trace import StatusCode
-from opentelemetry import trace
 
 
 # ---------------------------------------------------------------------------

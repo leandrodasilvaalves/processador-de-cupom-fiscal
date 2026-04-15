@@ -16,7 +16,7 @@ def insert_line_of_business(db, description):
             cursor = db.cursor()
             cursor.execute(
                 """
-                INSERT INTO ramos_atividade (descricao) 
+                INSERT INTO ramos_atividade (descricao)
                 VALUES (%s)
                 """,
                 (description,),

@@ -31,7 +31,7 @@ jobs:
       - name: Install test dependencies
         run: pip install pytest pytest-cov hypothesis opentelemetry-sdk flake8
       - name: Lint with flake8
-        run: flake8 src/ --max-line-length=120 --extend-ignore=E302,E203,E402,E741,W291,W292,W293,W391,F401,F811,F841
+        run: flake8 src/ --max-line-length=120
 
   tests:
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
       - name: Install worker dependencies
         run: pip install -r src/worker_app/requirements.txt
       - name: Install test dependencies
-        run: pip install pytest pytest-cov hypothesis opentelemetry-sdk
+        run: pip install pytest pytest-cov hypothesis opentelemetry-sdk httpx
       - name: Run tests
         run: pytest src/tests/
 

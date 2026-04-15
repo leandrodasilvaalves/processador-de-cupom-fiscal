@@ -4,8 +4,6 @@ Covers: P11 (required fields in worker logs) + error log edge case.
 """
 import io
 import json
-import pytest
-from unittest.mock import patch, MagicMock
 from hypothesis import given, settings
 import hypothesis.strategies as st
 
@@ -14,7 +12,6 @@ import structlog
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry import trace
 
 
 # ---------------------------------------------------------------------------
@@ -47,8 +44,8 @@ def _setup_log_capture():
 def _parse_all_logs(buf: io.StringIO) -> list:
     """Parses all JSON log lines from the buffer."""
     buf.seek(0)
-    lines = [l.strip() for l in buf.getvalue().splitlines() if l.strip()]
-    return [json.loads(l) for l in lines]
+    lines = [line.strip() for line in buf.getvalue().splitlines() if line.strip()]
+    return [json.loads(line) for line in lines]
 
 
 # ---------------------------------------------------------------------------

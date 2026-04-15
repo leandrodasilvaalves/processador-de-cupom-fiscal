@@ -16,15 +16,15 @@ sys.modules.setdefault("opentelemetry.sdk.logs", _sdk_logs)
 sys.modules.setdefault("opentelemetry.sdk.logs.export", _sdk_logs_export)
 # --- end shim ---
 
-import pytest
+import pytest  # noqa: E402
 
 # Ensure src/ is on the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider  # noqa: E402
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter  # noqa: E402
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor  # noqa: E402
+from opentelemetry import trace  # noqa: E402
 
 
 @pytest.fixture

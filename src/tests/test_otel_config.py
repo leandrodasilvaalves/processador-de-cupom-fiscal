@@ -5,7 +5,7 @@ Covers: P1 (Resource attributes), P2 (Tracer name), P13 (OTLP endpoint)
 """
 import os
 import pytest
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import patch, MagicMock
 from hypothesis import given, settings
 import hypothesis.strategies as st
 
@@ -51,7 +51,8 @@ def _run_configure_otel(service_name: str, extra_env: dict = None):
                 captured["tracer_provider"] = provider
 
             with patch("config.otel_config.trace.set_tracer_provider", side_effect=fake_set_tp), \
-                 patch("config.otel_config.trace.get_tracer", wraps=lambda name: _make_mock_tracer(name)) as mock_get_tracer:
+                 patch("config.otel_config.trace.get_tracer",
+                       wraps=lambda name: _make_mock_tracer(name)) as mock_get_tracer:
                 from config.otel_config import configure_otel
                 tracer = configure_otel(service_name)
                 captured["mock_span_exp"] = mock_span_exp
@@ -92,8 +93,8 @@ def _make_mock_tracer(name: str):
 @settings(max_examples=30, deadline=None)
 def test_p1_resource_attributes_reflect_env_config(service_name, deployment_env):
     # Feature: observability-logs-traces, Property 1: Resource attributes reflect environment configuration
-    from opentelemetry.sdk.trace import TracerProvider
-    from opentelemetry.sdk.resources import Resource
+    from opentelemetry.sdk.trace import TracerProvider  # noqa: F401
+    from opentelemetry.sdk.resources import Resource  # noqa: F401
 
     captured_provider = {}
 
@@ -156,7 +157,7 @@ def test_p2_tracer_name_matches_service_name(service_name):
              patch("config.otel_config.trace.set_tracer_provider"), \
              patch("config.otel_config.trace.get_tracer", side_effect=fake_get_tracer):
             from config.otel_config import configure_otel
-            tracer = configure_otel(service_name)
+            configure_otel(service_name)
 
     assert captured_tracer_name.get("name") == service_name
 
@@ -220,7 +221,7 @@ def test_smoke_configure_otel_initializes():
              patch("config.log_config.configure_logging"), \
              patch("config.otel_config.set_logger_provider"), \
              patch("config.otel_config.trace.set_tracer_provider"), \
-             patch("config.otel_config.trace.get_tracer", return_value=MagicMock()) as mock_get_tracer:
+             patch("config.otel_config.trace.get_tracer", return_value=MagicMock()):
             from config.otel_config import configure_otel
             tracer = configure_otel("smoke-test-service")
             assert tracer is not None

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import APIRouter
 from database import db as _db, db_purchase
 
 router = APIRouter(
@@ -6,12 +6,14 @@ router = APIRouter(
     tags=["compras"],
 )
 
+
 @router.get("/")
 async def listar_compras():
     db = _db.connect()
     compras = db_purchase.get_all_purchases(db)
     db.close()
     return {"dados": compras}
+
 
 @router.get("/{id}/items")
 async def listar_itens_compra(id: int):

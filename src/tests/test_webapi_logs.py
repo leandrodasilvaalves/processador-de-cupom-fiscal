@@ -5,8 +5,6 @@ Covers: P12 (required fields in WebAPI logs) + 5xx log edge case.
 import io
 import json
 import time
-import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
 from hypothesis import given, settings
 import hypothesis.strategies as st
 
@@ -39,8 +37,8 @@ def _setup_log_capture():
 
 def _parse_all_logs(buf: io.StringIO) -> list:
     buf.seek(0)
-    lines = [l.strip() for l in buf.getvalue().splitlines() if l.strip()]
-    return [json.loads(l) for l in lines]
+    lines = [line.strip() for line in buf.getvalue().splitlines() if line.strip()]
+    return [json.loads(line) for line in lines]
 
 
 def _make_app_with_log_capture(buf: io.StringIO):
@@ -129,7 +127,7 @@ def test_p12_request_log_has_required_fields(method, path_suffix):
     logs = _parse_all_logs(buf)
     assert len(logs) >= 1
 
-    request_log = next((l for l in logs if l.get("event") == "http_request_received"), None)
+    request_log = next((log_entry for log_entry in logs if log_entry.get("event") == "http_request_received"), None)
     assert request_log is not None, "http_request_received log not found"
     assert "method" in request_log
     assert "path" in request_log
@@ -155,7 +153,7 @@ def test_p12_response_log_has_status_code_and_duration(method):
     method_fn(path)
 
     logs = _parse_all_logs(buf)
-    response_log = next((l for l in logs if l.get("event") == "http_request_completed"), None)
+    response_log = next((log_entry for log_entry in logs if log_entry.get("event") == "http_request_completed"), None)
     assert response_log is not None, "http_request_completed log not found"
     assert "status_code" in response_log
     assert "duration_ms" in response_log
@@ -180,7 +178,7 @@ def test_edge_5xx_log_has_error_fields():
     client.get("/boom")
 
     logs = _parse_all_logs(buf)
-    error_log = next((l for l in logs if l.get("event") == "http_request_error"), None)
+    error_log = next((log_entry for log_entry in logs if log_entry.get("event") == "http_request_error"), None)
     assert error_log is not None, "http_request_error log not found"
     assert "method" in error_log
     assert "path" in error_log

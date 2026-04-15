@@ -51,15 +51,15 @@ def get_all_purchases(db):
         try:
             cursor = db.cursor()
             cursor.execute(
-                """ 
-                SELECT 
-                    c.id, c.total_compra, c.desconto, 
+                """
+                SELECT
+                    c.id, c.total_compra, c.desconto,
                     c.valor_pago, c.forma_pagamento,
                     e.nome_fantasia, e.razao_social,
                     e.endereco,
-                    ra.id as ra_id, 
+                    ra.id as ra_id,
                     ra.descricao as ramo_atividade
-                FROM compras c 
+                FROM compras c
                 LEFT JOIN empresas e ON e.id = c.empresa_id
                 LEFT JOIN ramos_atividade ra ON ra.id = c.ramos_atividade_id
             """
@@ -82,12 +82,12 @@ def get_by_company(db, company_id):
         try:
             cursor = db.cursor()
             cursor.execute(
-                """ 
-                SELECT 
-                    c.id, c.total_compra, c.desconto, 
+                """
+                SELECT
+                    c.id, c.total_compra, c.desconto,
                     c.valor_pago, c.forma_pagamento,
                     e.nome_fantasia, e.razao_social
-                FROM compras c 
+                FROM compras c
                 LEFT JOIN empresas e ON e.id = c.empresa_id
                 WHERE empresa_id = %s
             """,
@@ -111,10 +111,10 @@ def get_items(db, purchase_id):
         try:
             cursor = db.cursor()
             cursor.execute(
-                """ 
-                SELECT 
-                    ci.id, p.nome as produto, p.id as pid, 
-                    ci.quantidade, ci.preco, ci.total, ci.unidade           
+                """
+                SELECT
+                    ci.id, p.nome as produto, p.id as pid,
+                    ci.quantidade, ci.preco, ci.total, ci.unidade
                 FROM compras_items ci
                 LEFT JOIN produtos p ON p.id = ci.produto_id
                 WHERE ci.compra_id = %s
@@ -139,10 +139,10 @@ def insert(db, purchase: Purchase):
         try:
             cursor = db.cursor()
             cursor.execute(
-                """INSERT INTO compras (empresa_id, chave_acesso_nfce, total_compra, 
-                    desconto, valor_pago, forma_pagamento, data_emissao, 
-                    data_autorizacao, situacao, danfe_numero, danfe_serie, protocolo, 
-                    hash_arquivo, ramos_atividade_id) 
+                """INSERT INTO compras (empresa_id, chave_acesso_nfce, total_compra,
+                    desconto, valor_pago, forma_pagamento, data_emissao,
+                    data_autorizacao, situacao, danfe_numero, danfe_serie, protocolo,
+                    hash_arquivo, ramos_atividade_id)
                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                 (
                     purchase.company_id,
@@ -178,8 +178,8 @@ def insert_item(db, item: PurchaseItem):
         try:
             cursor = db.cursor()
             cursor.execute(
-                """INSERT INTO compras_items 
-                    (compra_id, produto_id, quantidade, preco, total, unidade) 
+                """INSERT INTO compras_items
+                    (compra_id, produto_id, quantidade, preco, total, unidade)
                    VALUES (%s, %s, %s, %s, %s, %s)""",
                 (
                     item.purchase_id,
@@ -210,8 +210,8 @@ def update_all_line_of_business(db):
                 """
                     UPDATE compras c
                     SET ramos_atividade_id = (
-                        SELECT e.ramos_atividade_id 
-                        FROM empresas e 
+                        SELECT e.ramos_atividade_id
+                        FROM empresas e
                         WHERE e.id = c.empresa_id
                     )
                     WHERE c.ramos_atividade_id IS NULL;

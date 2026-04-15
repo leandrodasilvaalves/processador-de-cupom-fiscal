@@ -38,7 +38,7 @@ def insert(db, product: Product):
         try:
             cursor = db.cursor()
             cursor.execute(
-                """INSERT INTO produtos (nome, preco, unidade) 
+                """INSERT INTO produtos (nome, preco, unidade)
                    VALUES (%s, %s, %s)""",
                 (product.name, product.price, product.unity),
             )

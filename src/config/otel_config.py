@@ -1,7 +1,6 @@
 import logging
 import os
 
-import structlog
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 from opentelemetry.exporter.otlp.proto.http._log_exporter import OTLPLogExporter
@@ -78,7 +77,7 @@ def configure_otel(service_name: str | None = None) -> trace.Tracer:
     set_logger_provider(logger_provider)
 
     # Inject OtelTraceProcessor into structlog pipeline
-    from config.log_config import configure_logging
+    from config.log_config import configure_logging  # noqa: E402
     configure_logging(extra_processors=[OtelTraceProcessor()])
 
     return trace.get_tracer(resolved_service_name)

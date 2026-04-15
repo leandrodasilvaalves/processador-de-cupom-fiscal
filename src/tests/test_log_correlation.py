@@ -4,16 +4,10 @@ Covers: P3 (trace/span IDs in log), P4 (valid JSON output) + edge case inactive 
 """
 import io
 import json
-import sys
-import pytest
-from unittest.mock import patch
 from hypothesis import given, settings
 import hypothesis.strategies as st
 
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry import context as otel_context, trace
+from opentelemetry import trace
 
 import structlog
 
@@ -24,10 +18,9 @@ import structlog
 
 def _make_tracer_with_ids(trace_id: int, span_id: int):
     """Creates a tracer provider and a span with specific trace/span IDs via mock."""
-    from opentelemetry.sdk.trace import TracerProvider, ReadableSpan
+    from opentelemetry.sdk.trace import TracerProvider, ReadableSpan  # noqa: F401
     from opentelemetry.sdk.trace.export import SimpleSpanProcessor
     from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-    from opentelemetry.trace import SpanContext, TraceFlags, NonRecordingSpan
 
     exporter = InMemorySpanExporter()
     provider = TracerProvider()
@@ -37,6 +30,7 @@ def _make_tracer_with_ids(trace_id: int, span_id: int):
 
 def _capture_log_output(log_fn, *args, **kwargs) -> str:
     """Captures structlog JSON output from stdout."""
+    from unittest.mock import patch
     buf = io.StringIO()
     with patch("sys.stdout", buf):
         log_fn(*args, **kwargs)
@@ -71,9 +65,10 @@ def _setup_structlog_with_otel_processor():
     trace_id=st.integers(min_value=1, max_value=2**128 - 1),
     span_id=st.integers(min_value=1, max_value=2**64 - 1),
 )
-@settings(max_examples=50)
+@settings(max_examples=50, deadline=None)
 def test_p3_log_contains_correct_trace_and_span_ids(trace_id, span_id):
-    # Feature: observability-logs-traces, Property 3: Log events within an active span contain correct trace and span IDs
+    # Feature: observability-logs-traces, Property 3: Log events within an active span
+    # contain correct trace and span IDs
     from opentelemetry.trace import SpanContext, TraceFlags, NonRecordingSpan
 
     log, buf = _setup_structlog_with_otel_processor()
@@ -85,7 +80,6 @@ def test_p3_log_contains_correct_trace_and_span_ids(trace_id, span_id):
         trace_flags=TraceFlags(TraceFlags.SAMPLED),
     )
     span = NonRecordingSpan(span_ctx)
-    token = trace.use_span(span, end_on_exit=False)
 
     ctx = trace.use_span(span, end_on_exit=False)
     with ctx:
@@ -97,8 +91,8 @@ def test_p3_log_contains_correct_trace_and_span_ids(trace_id, span_id):
 
     expected_trace_id = format(trace_id, "032x")
     expected_span_id = format(span_id, "016x")
-    assert data.get("trace_id") == expected_trace_id, f"trace_id mismatch"
-    assert data.get("span_id") == expected_span_id, f"span_id mismatch"
+    assert data.get("trace_id") == expected_trace_id, "trace_id mismatch"
+    assert data.get("span_id") == expected_span_id, "span_id mismatch"
 
 
 # ---------------------------------------------------------------------------
@@ -112,7 +106,7 @@ def test_p3_log_contains_correct_trace_and_span_ids(trace_id, span_id):
     num_field=st.floats(allow_nan=False, allow_infinity=False),
     list_field=st.lists(st.text(max_size=20), max_size=5),
 )
-@settings(max_examples=50)
+@settings(max_examples=50, deadline=None)
 def test_p4_log_output_is_valid_json(event, str_field, num_field, list_field):
     # Feature: observability-logs-traces, Property 4: Log output is always valid JSON
     log, buf = _setup_structlog_with_otel_processor()

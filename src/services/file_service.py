@@ -6,6 +6,7 @@ import shutil
 pending_dir = "./pdf-files/pending"
 processed_dir = "./pdf-files/processed"
 
+
 def read_pending():
     logger.info("Reading pending files from directory", directory=pending_dir)
     pending_files = os.listdir(pending_dir)
@@ -21,6 +22,7 @@ def move_to_processed(file):
     dest_path = os.path.join(processed_dir, new_filename)
     shutil.move(file_path, dest_path)
     logger.info("Moved file to processed", original=file, new=new_filename)
+
 
 def get_file_path(file):
     return os.path.join(pending_dir, file)

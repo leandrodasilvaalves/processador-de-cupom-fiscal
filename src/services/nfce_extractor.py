@@ -9,6 +9,7 @@ from entities.receipt import Receipt
 
 tracer = trace.get_tracer(__name__)
 
+
 def extract_nfce_data(file_path: str) -> Receipt:
     if not os.path.exists(file_path):
         logger.error(f"File not found '{file_path}'.")
