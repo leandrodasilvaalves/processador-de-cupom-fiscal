@@ -7,6 +7,7 @@ router = APIRouter(
     tags=["empresas"],
 )
 
+
 @router.get("/")
 async def listar_empresas():
     db = _db.connect()
@@ -37,4 +38,3 @@ async def atualizar_ramo_atividade(company_id: int, company: CompanyUpdateLineOf
     sucesso = db_company.update_company_activity_branch(db, company_id, company.ramo_atividade_id)
     db.close()
     return {"sucesso": sucesso}
-

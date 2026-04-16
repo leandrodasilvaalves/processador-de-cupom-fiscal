@@ -57,7 +57,7 @@ class Purchase(Entity):
     def purchase_total(self, value: float):
         if self._purchase_total is None:
             self._purchase_total = self._to_float(
-                self._extract(value, r"Valor Total dos Produtos \(R\$\)\s*([\d,.]+)")
+                self._extract(value, r"Valor Total dos Produtos \(R\$\)\s*\n?\s*([\d,.]+)")
             )
 
     @property
@@ -68,7 +68,7 @@ class Purchase(Entity):
     def discount(self, value: float):
         if self._discount is None:
             self._discount = self._to_float(
-                self._extract(value, r"Valor Descontos \(R\$\)\s*([\d,.]+)")
+                self._extract(value, r"Valor Descontos \(R\$\)\s*\n?\s*([\d,.]+)")
             )
 
     @property
@@ -79,7 +79,7 @@ class Purchase(Entity):
     def paid_amount(self, value: float):
         if self._paid_amount is None:
             self._paid_amount = self._to_float(
-                self._extract(value, r"Valor Pago \(R\$\)\s*([\d,.]+)")
+                self._extract(value, r"Valor Pago \(R\$\)\s*\n?\s*([\d,.]+)")
             )
 
     @property

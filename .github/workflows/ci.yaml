@@ -1,0 +1,111 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - develop
+      - 'release/**'
+      - main
+  pull_request:
+    branches:
+      - develop
+      - 'release/**'
+      - main
+
+jobs:
+  versioning:
+    uses: laboratorio-net/actions/.github/workflows/git-version.yaml@v1
+
+  setup:
+    runs-on: ubuntu-latest
+    needs: [versioning]
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
+    steps:
+      - name: Set version output
+        id: set_version
+        run: echo "version=${{ needs.versioning.outputs.version }}" >> $GITHUB_OUTPUT
+
+  build_python:
+    runs-on: ubuntu-latest
+    needs: [setup]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install webapi dependencies
+        run: pip install -r src/webapi/requirements.txt
+      - name: Install worker dependencies
+        run: pip install -r src/worker_app/requirements.txt
+      - name: Install test dependencies
+        run: pip install pytest pytest-cov hypothesis opentelemetry-sdk flake8
+      - name: Lint with flake8
+        run: flake8 src/ --max-line-length=120
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: [build_python]
+    env:
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install webapi dependencies
+        run: pip install -r src/webapi/requirements.txt
+      - name: Install worker dependencies
+        run: pip install -r src/worker_app/requirements.txt
+      - name: Install test dependencies
+        run: pip install pytest pytest-cov hypothesis opentelemetry-sdk httpx
+      - name: Run tests
+        run: pytest src/tests/
+  
+  docker_webapi:
+    uses: laboratorio-net/actions/.github/workflows/docker-build-publish.yaml@v1
+    needs: [tests, setup]
+    with:
+      context: .
+      dockerfile: src/webapi/Dockerfile
+      username: ${{ vars.DOCKERHUB_USERNAME }}
+      image-name: api.processador-de-cupom-fiscal
+      version: ${{ needs.setup.outputs.version }}
+      prefix-allowed-branch: develop
+    secrets:
+      usertoken: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+  docker_worker:
+    uses: laboratorio-net/actions/.github/workflows/docker-build-publish.yaml@v1
+    needs: [tests, setup]
+    with:
+      context: .
+      dockerfile: src/worker_app/Dockerfile
+      username: ${{ vars.DOCKERHUB_USERNAME }}
+      image-name: worker.processador-de-cupom-fiscal
+      version: ${{ needs.setup.outputs.version }}
+      prefix-allowed-branch: develop
+    secrets:
+      usertoken: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  create_tag:
+    needs: [setup, docker_webapi, docker_worker]
+    uses: laboratorio-net/actions/.github/workflows/create-tag.yaml@v1
+    with:
+      version: ${{ needs.setup.outputs.version }}
+
+  release_notes:
+    runs-on: ubuntu-latest
+    needs: [setup, create_tag]
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate release notes
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.setup.outputs.version }}
+          generate_release_notes: true
+          prerelease: ${{ github.ref != 'refs/heads/main' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GB_TOKEN }}

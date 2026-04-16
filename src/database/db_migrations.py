@@ -7,7 +7,7 @@ def _insert_migration_record(cursor, migration_name):
 
 def _migration_already_exists(cursor, migration_name):
     cursor.execute(
-        "SELECT COUNT(*) FROM _migrations WHERE migration_name = %s", 
+        "SELECT COUNT(*) FROM _migrations WHERE migration_name = %s",
         (migration_name,)
     )
     return cursor.fetchone()[0] > 0

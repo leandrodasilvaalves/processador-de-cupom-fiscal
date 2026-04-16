@@ -84,4 +84,3 @@ class Company(Entity):
         self.corporate_name = text
         self.trade_name = text
         self.address = text
-        
