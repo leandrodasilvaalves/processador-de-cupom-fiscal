@@ -50,9 +50,10 @@ docker compose down
 # Load pending PDF files (copies from 0-samples to pending)
 bash scripts/load-pending-files.sh
 
-# Install dependencies locally (per app)
-pip install -r src/webapi/requirements.txt
-pip install -r src/worker_app/requirements.txt
+# Setup local dev environment (venv centralizado na raiz)
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt  # union de webapi + worker_app
 ```
 
 ## Ports (host)
