@@ -10,6 +10,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk._logs import LoggerProvider
 from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
 from opentelemetry._logs import set_logger_provider
+from opentelemetry.sdk._logs import LoggingHandler
 
 _logger = logging.getLogger(__name__)
 
@@ -75,6 +76,14 @@ def configure_otel(service_name: str | None = None) -> trace.Tracer:
     log_exporter = OTLPLogExporter(endpoint=f"{endpoint}/v1/logs")
     logger_provider.add_log_record_processor(BatchLogRecordProcessor(log_exporter))
     set_logger_provider(logger_provider)
+
+    # Bridge Python logging -> OTel LoggerProvider so logs reach Loki
+    # Attach only to the app logger to avoid feedback loops with OTel internals
+    otel_handler = LoggingHandler(level=logging.INFO, logger_provider=logger_provider)
+    app_logger = logging.getLogger("processador-cupom-fiscal")
+    app_logger.addHandler(otel_handler)
+    # Prevent OTel SDK internal loggers from feeding back into the handler
+    logging.getLogger("opentelemetry").propagate = False
 
     # Inject OtelTraceProcessor into structlog pipeline
     from config.log_config import configure_logging  # noqa: E402

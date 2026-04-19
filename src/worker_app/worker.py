@@ -71,13 +71,14 @@ def process():
                 error_count += 1
 
     duration_ms = int((time.monotonic() - start_time) * 1000)
-    logger.info(
-        "processing_cycle_completed",
-        processed_count=processed_count,
-        skipped_count=skipped_count,
-        error_count=error_count,
-        duration_ms=duration_ms,
-    )
+    if processed_count or skipped_count or error_count:
+        logger.info(
+            "processing_cycle_completed",
+            processed_count=processed_count,
+            skipped_count=skipped_count,
+            error_count=error_count,
+            duration_ms=duration_ms,
+        )
 
     _db.close()
 

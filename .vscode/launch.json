@@ -34,7 +34,9 @@
             "module": "uvicorn",
             "cwd": "${workspaceFolder}",
             "args": [
-                "src.webapi.program:app",
+                "webapi.program:app",
+                "--host", "0.0.0.0",
+                "--port", "8123"
                 // "--reload"
             ],
             "justMyCode": true,
@@ -42,7 +44,9 @@
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/src"
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4328",
+                "OTEL_DEPLOYMENT_ENVIRONMENT": "dev"
             }
         },
         {

@@ -14,7 +14,5 @@ db_tables.setup_database(db)
 db_close()
 
 while True:
-    logger.info("Starting process.")
     worker.process()
-    logger.info("Process finished.")
     sleep(5)

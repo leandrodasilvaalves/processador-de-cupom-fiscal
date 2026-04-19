@@ -26,4 +26,3 @@ def connect():
 def close():
     if __db is not None and __db.is_connected():
         __db.close()
-        logger.info("Database connection closed.")
