@@ -22,53 +22,56 @@ def process():
     skipped_count = 0
     error_count = 0
 
-    for file in pending_files:
-        with tracer.start_as_current_span("worker.process_file") as file_span:
-            file_path = file_service.get_file_path(file)
-            file_hash = hash_calculator.calculate(file_path)
+    with tracer.start_as_current_span("worker.processing_cycle") as cycle_span:
+        cycle_span.set_attribute("pending_files_count", len(pending_files))
 
-            file_span.set_attribute("file.name", file)
-            file_span.set_attribute("file.hash", file_hash)
+        for file in pending_files:
+            with tracer.start_as_current_span("worker.process_file") as file_span:
+                file_path = file_service.get_file_path(file)
+                file_hash = hash_calculator.calculate(file_path)
 
-            logger.info("file_processing_started", file_name=file)
+                file_span.set_attribute("file.name", file)
+                file_span.set_attribute("file.hash", file_hash)
 
-            try:
-                if _is_duplicate(file, db_purchase.get_by_hash_file(db, file_hash)):
-                    file_span.set_attribute("file.skipped_reason", "duplicate_hash")
-                    logger.info("file_skipped", file_name=file, skipped_reason="duplicate_hash")
-                    skipped_count += 1
-                    continue
+                logger.info("file_processing_started", file_name=file)
 
-                receipt = nfce_extractor.extract_nfce_data(file_path)
-                receipt.with_file_hash(file_hash)
-                purchase = receipt.purchase
+                try:
+                    if _is_duplicate(file, db_purchase.get_by_hash_file(db, file_hash)):
+                        file_span.set_attribute("file.skipped_reason", "duplicate_hash")
+                        logger.info("file_skipped", file_name=file, skipped_reason="duplicate_hash")
+                        skipped_count += 1
+                        continue
 
-                if _is_duplicate(file, db_purchase.get_by_nfce(db, purchase.nfce_access_key)):
-                    file_span.set_attribute("file.skipped_reason", "duplicate_access_key")
-                    logger.info("file_skipped", file_name=file, skipped_reason="duplicate_access_key")
-                    skipped_count += 1
-                    continue
+                    receipt = nfce_extractor.extract_nfce_data(file_path)
+                    receipt.with_file_hash(file_hash)
+                    purchase = receipt.purchase
 
-                company = company_service.process(db, receipt.company)
-                receipt.with_company(company[0])
-                receipt.with_line_of_business(company[1])
+                    if _is_duplicate(file, db_purchase.get_by_nfce(db, purchase.nfce_access_key)):
+                        file_span.set_attribute("file.skipped_reason", "duplicate_access_key")
+                        logger.info("file_skipped", file_name=file, skipped_reason="duplicate_access_key")
+                        skipped_count += 1
+                        continue
 
-                purchase_id = purchase_service.process(db, receipt.purchase)
+                    company = company_service.process(db, receipt.company)
+                    receipt.with_company(company[0])
+                    receipt.with_line_of_business(company[1])
 
-                file_service.move_to_processed(file)
+                    purchase_id = purchase_service.process(db, receipt.purchase)
 
-                logger.info(
-                    "file_processing_completed",
-                    file_name=file,
-                    company_id=company[0],
-                    purchase_id=purchase_id,
-                    item_count=len(receipt.purchase.items),
-                )
-                processed_count += 1
+                    file_service.move_to_processed(file)
 
-            except Exception as e:
-                logger.error("file_processing_error", file_name=file, error=str(e))
-                error_count += 1
+                    logger.info(
+                        "file_processing_completed",
+                        file_name=file,
+                        company_id=company[0],
+                        purchase_id=purchase_id,
+                        item_count=len(receipt.purchase.items),
+                    )
+                    processed_count += 1
+
+                except Exception as e:
+                    logger.error("file_processing_error", file_name=file, error=str(e))
+                    error_count += 1
 
     duration_ms = int((time.monotonic() - start_time) * 1000)
     if processed_count or skipped_count or error_count:
