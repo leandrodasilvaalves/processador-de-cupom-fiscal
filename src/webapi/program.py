@@ -8,7 +8,7 @@ from config.otel_config import configure_otel
 from config.log_config import logger
 
 # 5.1 — Initialize OTel before creating the app (reads OTEL_SERVICE_NAME from env)
-configure_otel()
+configure_otel("webapi")
 
 app = FastAPI(
     title="Processador de Cupom Fiscal",

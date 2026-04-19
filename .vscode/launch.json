@@ -22,7 +22,9 @@
             "envFile": "${workspaceFolder}/.env",
             "preLaunchTask": "load pending files",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/src"
+                "PYTHONPATH": "${workspaceFolder}/src",
+                "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4328",
+                "OTEL_DEPLOYMENT_ENVIRONMENT": "dev"
             }
         },
         {
