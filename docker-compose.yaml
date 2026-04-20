@@ -30,6 +30,7 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana:4318
       OTEL_SERVICE_NAME: webapi
       OTEL_DEPLOYMENT_ENVIRONMENT: development
+      OTEL_ENABLED: true
     depends_on:
       mysql:
         condition: service_healthy
@@ -57,6 +58,7 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: http://grafana:4318
       OTEL_SERVICE_NAME: worker_app
       OTEL_DEPLOYMENT_ENVIRONMENT: development
+      OTEL_ENABLED: true
     depends_on:
       mysql:
         condition: service_healthy

@@ -24,7 +24,8 @@
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/src",
                 "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4328",
-                "OTEL_DEPLOYMENT_ENVIRONMENT": "dev"
+                "OTEL_DEPLOYMENT_ENVIRONMENT": "dev",
+                "OTEL_ENABLED": "true"
             }
         },
         {
@@ -46,7 +47,8 @@
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/src",
                 "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4328",
-                "OTEL_DEPLOYMENT_ENVIRONMENT": "dev"
+                "OTEL_DEPLOYMENT_ENVIRONMENT": "dev",
+                "OTEL_ENABLED": "true"
             }
         },
         {

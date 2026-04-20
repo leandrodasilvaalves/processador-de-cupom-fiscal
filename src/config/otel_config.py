@@ -37,7 +37,16 @@ def configure_otel(service_name: str | None = None) -> trace.Tracer:
     Inicializa TracerProvider e LoggerProvider com exportadores OTLP HTTP.
     Adiciona o OtelTraceProcessor ao pipeline do structlog.
     Retorna o Tracer global para o serviço.
+    Exportação pode ser desabilitada via OTEL_ENABLED=false.
     """
+    # Allow disabling OTEL export via env var
+    otel_enabled = os.environ.get("OTEL_ENABLED", "true").strip().lower()
+    if otel_enabled in ("false", "0", "no"):
+        _logger.info("OpenTelemetry export disabled (OTEL_ENABLED=%s)", otel_enabled)
+        from config.log_config import configure_logging  # noqa: E402
+        configure_logging()
+        return trace.get_tracer(service_name or "noop")
+
     # Resolve service name
     resolved_service_name = service_name or os.environ.get("OTEL_SERVICE_NAME")
     if not resolved_service_name:
