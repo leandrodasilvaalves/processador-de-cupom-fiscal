@@ -20,7 +20,7 @@ def process():
 
     processed_count = 0
     skipped_count = 0
-    error_count = 0    
+    error_count = 0
 
     for file in pending_files:
         with tracer.start_as_current_span("worker.process_file") as file_span:

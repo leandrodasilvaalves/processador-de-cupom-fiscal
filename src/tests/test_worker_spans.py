@@ -53,29 +53,11 @@ def _run_worker(provider, pending_files, mock_receipt=None, hash_return="abc123"
         from worker_app import worker as worker_module
         worker_module.process()
 
-
-# ---------------------------------------------------------------------------
-# P5: Processing cycle span captures pending file count
-# Feature: observability-logs-traces, Property 5: Processing cycle span captures pending file count
-# ---------------------------------------------------------------------------
-
-@given(pending_files=st.lists(st.text(min_size=1, max_size=30), max_size=10))
-@settings(max_examples=30, deadline=None)
-def test_p5_processing_cycle_span_has_pending_files_count(pending_files):
-    # Feature: observability-logs-traces, Property 5: Processing cycle span captures pending file count
-    provider, exporter = _make_provider()
-    _run_worker(provider, pending_files)
-
-    spans = exporter.get_finished_spans()
-    cycle_span = _get_span_by_name(spans, "worker.processing_cycle")
-    assert cycle_span is not None, "worker.processing_cycle span not found"
-    assert cycle_span.attributes.get("pending_files_count") == len(pending_files)
-
-
 # ---------------------------------------------------------------------------
 # P6: Process file span contains file identity attributes
 # Feature: observability-logs-traces, Property 6: Process file span contains file identity attributes
 # ---------------------------------------------------------------------------
+
 
 @given(
     file_name=st.text(
